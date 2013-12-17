@@ -52,6 +52,13 @@
     // Initialize current user
     $Auth = Auth::getAuth();
 
+    if ($Auth->loggedIn())
+    {
+        # User logged in successfully, so let's update their active and login status
+        $db = Database::getDatabase();
+        $db->query("UPDATE users SET `active`=" . time() . " WHERE id=" . $Auth->id);
+    }
+
     // Object for tracking and displaying error messages
     $Error = new Error();
 

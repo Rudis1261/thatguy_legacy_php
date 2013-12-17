@@ -10,6 +10,8 @@
         public $username;
         public $user;
         public $expiryDate;
+        public $login;
+        public $active;
         public $loginUrl = './login.php'; // Where to direct users to login
 
         private $nid;
@@ -17,14 +19,16 @@
 
         public function __construct()
         {
-            $this->email      = null;
-            $this->id         = null;
-            $this->nid        = null;
-            $this->username   = null;
-            $this->user       = null;
-            $this->loggedIn   = false;
-            $this->expiryDate = mktime(0, 0, 0, 6, 2, 2037);
-            $this->user       = new User();
+            $this->email        = null;
+            $this->login        = null;
+            $this->active       = null;
+            $this->id           = null;
+            $this->nid          = null;
+            $this->username     = null;
+            $this->user         = null;
+            $this->loggedIn     = false;
+            $this->expiryDate   = mktime(0, 0, 0, 6, 2, 2037);
+            $this->user         = new User();
         }
 
         public static function getAuth()
@@ -49,15 +53,20 @@
 
             $db = Database::getDatabase();
             $hashed_password = self::hashedPassword($password);
-            $row = $db->getRow("SELECT `id`, `nid`, `username`, `password`, `level`, `email` FROM users WHERE username = " . $db->quote($username) . " AND password = " . $db->quote($hashed_password));
+            $row = $db->getRow("SELECT `id`, `nid`, `username`, `login`, `active`, `password`, `level`, `email` FROM users WHERE username = " . $db->quote($username) . " AND password = " . $db->quote($hashed_password));
 
             if($row === false)
                 return false;
+
+            # User logged in successfully, so let's update their active and login status
+            $db->query("UPDATE users SET `login`=" . time() . " WHERE id=" . $row['id']);
 
             $this->email    = $row['email'];
             $this->id       = $row['id'];
             $this->nid      = $row['nid'];
             $this->username = $row['username'];
+            $this->active   = $row['active'];
+            $this->login    = $row['login'];
             $this->user     = new User();
             $this->user->id = $this->id;
             $this->user->load($row);
@@ -65,12 +74,12 @@
             // Check if the account has been activated yet
             $active = $db->getRow("SELECT `id`, `user`, `code`, `active` FROM activation WHERE active=1 and  user = " . $db->quote($this->id));
 
-                if ($active === false)
-                    return 'inactive';
+            if ($active === false)
+                return 'inactive';
 
-                $this->generateBCCookies();
-                $this->loggedIn = true;
-                return true;
+            $this->generateBCCookies();
+            $this->loggedIn = true;
+            return true;
         }
 
         public function logout($redirect=false)
@@ -439,7 +448,7 @@
             $db = Database::getDatabase();
 
             // We SELECT * so we can load the full user record into the user DBObject later
-            $row = $db->getRow('SELECT  `id`, `nid`, `username`, `password`, `level`, `email` FROM users WHERE nid = ' . $db->quote($nid));
+            $row = $db->getRow('SELECT  `id`, `active`, `login`, `nid`, `username`, `password`, `level`, `email` FROM users WHERE nid = ' . $db->quote($nid));
             if($row === false)
                 return false;
 
@@ -447,6 +456,8 @@
             $this->id       = $row['id'];
             $this->nid      = $row['nid'];
             $this->username = $row['username'];
+            $this->login    = $row['login'];
+            $this->active   = $row['active'];
             $this->user     = new User();
             $this->user->id = $this->id;
             $this->user->load($row);

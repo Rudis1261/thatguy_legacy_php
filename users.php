@@ -94,9 +94,11 @@ $paging .='</ul>'. nl();
 $Users = DBObject::glob('Users', 'SELECT * FROM users ' . $search . ' ORDER By username ASC' . $Pager->limits);
 foreach($Users as $User)
 {
-    $userList[$User->id]['email'] = $User->email;
-    $userList[$User->id]['username'] = $User->username;
-    $userList[$User->id]['group'] = $User->level;
+    $userList[$User->id]['email']       = $User->email;
+    $userList[$User->id]['username']    = $User->username;
+    $userList[$User->id]['group']       = $User->level;
+    $userList[$User->id]['active']      = time2str($User->active);
+    $userList[$User->id]['login']       = time2str($User->login);
 }
 // Build the user list
 

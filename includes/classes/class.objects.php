@@ -5,7 +5,7 @@
     {
         public function __construct($id = null)
         {
-            parent::__construct('users', array('nid', 'username', 'password', 'level', 'email'), $id);
+            parent::__construct('users', $id);
         }
     }
 
@@ -13,7 +13,7 @@
     {
         public function __construct($id = null)
         {
-            parent::__construct('users', array('username', 'level', 'email'));
+            parent::__construct('users', $id);
         }
 
         public static function types()
@@ -46,32 +46,5 @@
         public function __construct($id = null)
         {
             parent::__construct('blog_comments', array('user_id', 'blog_id', 'comment', 'timestamp', 'username'), $id);
-        }
-    }
-
-    // Series and Episode classes to be used in TV Tracker
-    class Series extends DBObject
-    {
-        public function __construct($id = null)
-        {
-            parent::__construct('tv', $id);
-        }
-    }
-
-    // Series and Episode classes to be used in TV Tracker
-    class Episodes extends DBObject
-    {
-        public function __construct($id = null)
-        {
-            parent::__construct('tv_episode', $id);
-        }
-    }
-
-    // TV Alert will be used to track which alert email has been sent to which user
-    class TVAlert extends DBObject
-    {
-        public function __construct($id = null)
-        {
-            parent::__construct('tv_alert', $id);
         }
     }

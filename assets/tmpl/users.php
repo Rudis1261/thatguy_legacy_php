@@ -39,6 +39,8 @@ if ($total !== 0)
   <thead>
       <tr>
         <th>Username</th>
+        <th>Last Login</th>
+        <th>Last Active</th>
         <th>Email</th>
     	<th>Group</th>
     	<th>Password</th>
@@ -51,6 +53,8 @@ if ($total !== 0)
 	{
 	    echo "<tr>". nl();
 	    echo "<td>" . $values['username'] . "</td>". nl();
+        echo "<td>" . $values['login'] . "</td>". nl();
+        echo "<td>" . $values['active'] . "</td>". nl();
 
 	    // Build the miniForm to update the user's email address
 	    $string = "<input type='text' class='form-control input-sm' name='email' value='" . $values['email'] . "' />";
@@ -87,10 +91,10 @@ if ($total !== 0)
       <tr>
         <th>Username</th>
         <th>Send Email</th>
-	<th>Group</th>
-	<th>First Name</th>
-	<th>Surname</th>
-	<th>Birthdate</th>
+    	<th>Group</th>
+    	<th>First Name</th>
+    	<th>Surname</th>
+    	<th>Birthdate</th>
       </tr>
     </thead>
     <tbody>

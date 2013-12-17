@@ -25,7 +25,7 @@ if ( ($Auth->loggedIn()) && $Auth->isAdmin() )
 							<b>Hey Admin, here's the SQL queries run.</b>
 						</p>
 						<p>
-							<textarea class='input input-sm col-lg-12' rows='5'>";
+							<textarea class='input input-default input-sm col-lg-12' rows='10'>";
 								foreach($db->queries as $sql)
 								{
 									$additionalContent .= $sql . "\n";
@@ -61,7 +61,10 @@ if ( ($Auth->loggedIn()) && $Auth->isAdmin() )
 	if (isset($javascript))
 	{
 		echo $javascript . "?t=" .  Cache::modified($javascript);
-	} else {
+	}
+
+	else
+	{
 		require DOC_ROOT . '/includes/javascript.inc.php';
 		$JS->output('default.js');
 		$JS->export();
