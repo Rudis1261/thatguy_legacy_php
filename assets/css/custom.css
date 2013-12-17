@@ -1,0 +1,33 @@
+#main {
+
+  background: #101010;
+  padding-top: 10px;
+  font-weight: bold;
+  color: white;
+
+}
+
+
+#loginForm {
+
+  width: 320px;
+  margin: auto;
+  background: #353535;
+  padding: 25px 25px 15px 25px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  color: white;
+
+}
+
+
+body {
+
+  padding-top: 0px;
+  background: white;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  padding-bottom: 40px;
+
+}

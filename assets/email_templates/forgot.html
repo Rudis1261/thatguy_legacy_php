@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+      body                      { margin: 0px; padding: 0px; font-family: arial; }
+      h1                        { padding: 30px; margin: 0px; color: white; }
+      h3                        { padding: 15px; margin: 0px; color: white; }
+      h4                        { margin: 0px; background: #333333; padding: 5px; }
+      div                       {  }
+      #container                { padding: 10px; }
+    </style>
+  </head>
+  <body>
+    <div align="center" style="background: black; color: white;">       
+      <div align="left" style="width: 800px; background: #202020;">
+        <br />
+        <div align="right">
+          <div style="float: left;">
+            <h1>{title}</h1>
+          </div>  
+          <img src="assets/img/logo.png" alt="logo" style="padding-right: 10px;" />
+          <h4>
+            {prettyName}
+          </h4>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+    <div align="center" style="background: white;">
+        <div align="left" id="container" style="width: 800px; background: white; color: black;">
+          Hi {name},
+          <br /><br />
+          In order to reset your account password you will need to click on the link below.
+          <br /><br />
+          <a href='{link}'>{link}</a>
+          <br /><br />
+          Kind Regards,
+          <br /><br />
+          The Team
+          <br />
+          
+          <small>
+            Website: <a href='{footerLink}'>{footerLink}</a>          
+          <br />
+            Email Us: <a href='mailto:{footerEmail}?subject=Password Reset {name}'>{footerEmail}</a>
+          </small>
+        </div>        
+      </div>
+    </div>
+  </body>
+</html>
