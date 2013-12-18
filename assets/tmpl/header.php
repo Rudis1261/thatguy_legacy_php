@@ -176,8 +176,8 @@ if ($Auth->loggedIn())
       </div>
     </div>
   </div>
-  <div class="row">
-      <div class="navbar navbar-inverse" role="navigation" style="margin-right: -10px; margin-left: -10px;">
+  <div>
+      <div class="navbar navbar-default <!--navbar-inverse-->" role="navigation">
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style="margin-right: 25px; margin-left: 25px;">
