@@ -12,6 +12,11 @@ function wrapText(elementID, openTag, closeTag) {
 
 $(document).ready(function() {
 
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("active");
+    });
+
     // Unhide some things when their content changes
     /* Settings.php */
     $('input[name="user-email"]').focus(function(event){

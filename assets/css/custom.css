@@ -4,7 +4,6 @@
   padding-top: 10px;
   font-weight: bold;
   color: white;
-
 }
 
 
@@ -19,7 +18,6 @@
   border-radius: 10px;
   border: 1px solid #ccc;
   color: white;
-
 }
 
 
@@ -29,12 +27,149 @@ body {
   background: white;
   font-family: "Trebuchet MS", Helvetica, sans-serif;
   padding-bottom: 40px;
-
 }
 
-.navbar {
 
+#wrapper {
+  padding-left: 250px;
+  transition: all 0.2s ease 0s;
+}
 
-  border-bottom: 4px solid #007FFF;
+#sidebar-wrapper {
+  margin-left: -250px;
+  left: 250px;
+  width: 250px;
+  background: #000;
+  position: fixed;
+  height: 100%;
+  overflow-y: auto;
+  z-index: 1000;
+  transition: all 0.2s ease 0s;
+}
+
+#page-content-wrapper {
+  width: 100%;
+}
+
+.sidebar-nav {
+  position: absolute;
+  top: 0;
+  width: 250px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#sidebar-admin {
+  width: 250px;
+  list-style: none;
+}
+
+.sidebar-nav li {
+  line-height: 40px;
+  text-indent: 20px;
+}
+
+.sidebar-nav li a {
+  color: #999999;
+  display: block;
+  text-decoration: none;
+}
+
+.sidebar-nav h3 {
+
+  text-indent: 20px;
+  display: block;
+  text-decoration: none;
+}
+
+.sidebar-nav li a:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.2);
+  text-decoration: none;
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+  text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+  height: 65px;
+  line-height: 60px;
+  font-size: 18px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+  color: #999999;
+}
+
+#sidebar-admin > .active a {
+  background: #171616;
+}
+
+.sidebar-nav > .active a {
+  background: #171616;
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+  color: #fff;
+  background: none;
+}
+
+.content-header {
+  height: 100px;
+  line-height: 100px;
+  background: #353535;
+  padding: 10px 5% 0 0;
+  color: white;
+  margin: 0px;
+}
+
+.content-header h2 {
+  margin: 0;
+  margin-left: 10px;
+  line-height: 100px;
+  display: inline-block;
+}
+
+#menu-toggle {
+  display: none;
+}
+
+.inset {
+  padding: 20px;
+  width: auto;
+}
+
+@media (max-width:767px) {
+
+#wrapper {
+  padding-left: 0;
+}
+
+#sidebar-wrapper {
+  left: 0;
+}
+
+#wrapper.active {
+  position: relative;
+  left: 250px;
+}
+
+#wrapper.active #sidebar-wrapper {
+  left: 250px;
+  width: 250px;
+  transition: all 0.4s ease 0s;
+}
+
+#menu-toggle {
+  display: inline-block;
+}
+
+.inset {
+  padding: 15px;
+}
 
 }

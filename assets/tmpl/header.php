@@ -6,104 +6,33 @@ if(!defined('SPF'))
   exit();
 }
 
-# Check if we received a selection from the template page
-function selected($name, $selected, $addClass='')
-{
-  # Return active and the class
-  if ((isset($selected)) AND ($selected == $name))
-  {
-    return 'class="active ' . $addClass . '" ';
-  }
-
-  # or just the class
-  else
-  {
-    return 'class="' . $addClass . '" ';
-  }
-}
-
-if (!isset($selected)) { $selected = ''; }
-
-
-# LOGIN MENU
-# Set the defaults when a user is not logged in
-$login = '<ul class="nav navbar-nav navbar-right">
-
-            <li ' . selected('register', $selected) . '>
-              <a href="register.php">
-                <span>' . icon("pencil", true) . '</span> Register
-              </a>
-            </li>
-
-            <li class="divider-vertical"></li>
-
-            <li ' . selected('login', $selected) . '>
-              <a href="login.php">
-                <span>' . icon("user", true) . '</span> Login
-              </a>
-            </li>
-
-          </ul>';
-
-# Add links
-$links = '<li ' . selected('contact', $selected) . '>
-            <a href="contact.php" title="Contact Us">
-              '. icon('envelope', true) . ' Contact Us
-            </a>
-          </li>';
-
-# By Default no one has admin links
-$adminLinks = "";
-
+# Manually hook into the Auth
 $Auth = Auth::getAuth();
 
-# When a user is logged it they will have access to other items which normal users may not have
-if ($Auth->loggedIn())
-{
-  # Create the login menu-item
-  $login = '<ul class="nav navbar-nav navbar-right">
+# Let's define the menus
+$menu           = array(
+  "index.php"       => "Home " . icon('home'),
+  "portfolio.php"   => "Portfolio " . icon('camera'),
+  "blog.php"        => "Blog " . icon('bookmark'),
+);
 
-                  <li>
-                    <a href="settings.php">' . icon("cog") . ' Settings</a>
-                  </li>
+$menuLoggedOut  = array(
+  "contact.php"     => "Contact Us " . icon('send'),
+  "register.php"    => "Register " . icon('pencil'),
+  "login.php"       => "Login " . icon('user'),
+);
 
-                  <li class="divider"></li>
+$menuLoggedin   = array(
+  "bugreport.php"   => "Report Bug " . icon('bullhorn'),
+  "settings.php"    => "Settings " . icon('cog'),
+  "devider"         => "",
+  "logout.php"      => "Logoff " . icon('off')
+);
 
-                  <li>
-                    <a href="logout.php">' . icon("off") . ' Sign Out</a>
-                  </li>
-            </ul>';
-
-
-  # Override the links with logged in links
-  $links = '<li ' . selected('feature', $selected) . '>
-              <a href="feature.php" title="Request a feature to be added">
-                '. icon('question-sign', true) . ' Request Feature
-              </a>
-            </li>
-
-            <li ' . selected('bugreport', $selected) . '>
-              <a href="bugreport.php" title="Report a application bug">
-                '. icon('fire', true) . ' Report Bug
-              </a>
-            </li>';
-
-  # Check if the user is an admin or not
-  if ($admin)
-  {
-    $adminLinks = '<li ' . selected('users', $selected) . '>
-                    <a href="users.php" title="What\'s the crew up to?">
-                      ' . icon('user', true) . ' Users
-                    </a>
-                  </li>
-
-                  <li ' . selected('admin', $selected) . '>
-                    <a href="admin.php" title="Administration Page">
-                      ' . icon('cog', true) . ' Admin
-                    </a>
-                  </li>';
-  }
-}
+$menuAdmin      = array(
+  "users.php"       => "Users " . icon('user'),
+  "admin.php"       => "Admin " . icon('asterisk')
+);
 
 ?>
 <!DOCTYPE html>
@@ -148,74 +77,121 @@ if ($Auth->loggedIn())
   </head>
   <body onload="prettyPrint()">
 
+    <div id="wrapper">
+      <!-- Sidebar -->
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+    <?php
+          # Check if the selected was implied?
+          $selected = script_name() ? script_name() : "";
 
-  <div id="main">
-    <div class="container">
-      <div class="pull-left">
-
-        <?php
-
-          // display the title of the page
-          if (($title) AND ($title !== ''))
+          ##############################
+          # LOGGED IN USER
+          ##############################
+          if ($Auth->loggedIn())
           {
-            echo '<div class="pull-left" style="color: white;">
-                    <h2>
-                      ' . $title . '
-                    </h2>
-                  </div>';
+            echo "<h3>Welcome $Auth->username</h3>";
+
+            # Loop through the menus and create the links
+            foreach($menu as $script=>$name)
+            {
+              # I like using turnareys for this type of stuff
+              $class = ($script == "index.php") ? "sidebar-brand" : "sidebar";
+              $class = (($script == $selected) AND ($script !== "index.php")) ? $class . " active" : $class;
+
+              echo '<li class="' . $class . '"><a href="' . $script . '">' . $name . '</a></li>';
+            }
+
+            # Loop through the menus and create the links
+            foreach($menuLoggedin as $script=>$name)
+            {
+              # I like using turnareys for this type of stuff
+              $class = ($script == "index.php") ? "sidebar-brand" : "sidebar";
+              $class = (($script == $selected) AND ($script !== "index.php")) ? $class . " active" : $class;
+
+              echo '<li class="' . $class . '"><a href="' . $script . '">' . $name . '</a></li>';
+            }
+
+            ##############################
+            # ADMIN USER
+            ##############################
+            if ($Auth->isAdmin())
+            {
+              echo "<div id='sidebar-admin'>
+                      <h3>Administration</h3>";
+              # Loop through the menus and create the links
+              foreach($menuAdmin as $script=>$name)
+              {
+                # I like using turnareys for this type of stuff
+                $class = ($script == "index.php") ? "sidebar-brand" : "sidebar";
+                $class = (($script == $selected) AND ($script !== "index.php")) ? $class . " active" : $class;
+
+                echo '<li class="' . $class . '"><a href="' . $script . '">' . $name . '</a></li>';
+              }
+              echo "</div>";
+            }
           }
 
-        ?>
+          ##############################
+          # GUEST USER
+          ##############################
+          else
+          {
+            echo "<h3>Welcome Guest</h3>";
 
+            # Loop through the menus and create the links
+            foreach($menu as $script=>$name)
+            {
+              # I like using turnareys for this type of stuff
+              $class = ($script == "index.php") ? "sidebar-brand" : "sidebar";
+              $class = (($script == $selected) AND ($script !== "index.php")) ? $class . " active" : $class;
+
+              echo '<li class="' . $class . '"><a href="' . $script . '">' . $name . '</a></li>';
+            }
+
+            # Loop through the menus and create the links
+            foreach($menuLoggedOut as $script=>$name)
+            {
+              # I like using turnareys for this type of stuff
+              $class = ($script == "index.php") ? "sidebar-brand" : "sidebar";
+              $class = (($script == $selected) AND ($script !== "index.php")) ? $class . " active" : $class;
+
+              echo '<li class="' . $class . '"><a href="' . $script . '">' . $name . '</a></li>';
+            }
+          }
+    ?>
+        </ul>
       </div>
-      <div class="pull-right">
-        <div class="pull-left">
-          <h1><b>ThatGuy&nbsp;&nbsp;</b></h1>
+
+      <!-- Page content -->
+      <div id="page-content-wrapper">
+        <div class="content-header">
+            <div class="pull-left">
+              <a id="menu-toggle" href="#" class="btn btn-default"><?php echo icon('arrow-right');?></a>
+            </div>
+            <div class="pull-right">
+              <span class="pull-left">
+                <h2>
+                  <b>ThatGuy&nbsp;&nbsp;&nbsp;</b>
+                </h2>
+              </span>
+              <span class="pull-left">
+                <img src='assets/img/logo_white.png' alt='logo' width='90' height='97' />
+              </span>
+            </div>
         </div>
-        <img class="pull-left" src="assets/img/logo_white.png" alt="logo" width="70" height="79" />
-      </div>
-    </div>
-  </div>
-  <div>
-      <div class="navbar navbar-default <!--navbar-inverse-->" role="navigation">
-        <div class="container">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style="margin-right: 25px; margin-left: 25px;">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-          </div>
-          <div class="collapse navbar-collapse" style="margin-right: 0px; margin-left: 0px; height: auto;">
-            <ul class="nav navbar-nav">
+        <div class="clearfix"></div>
 
-                <li <?php echo selected('home', $selected); ?>>
-                  <a href="index.php" title="Home Page">
-                    <?php echo icon('home', true) ?> Home
-                  </a>
-                </li>
+        <!-- Keep all page content within the page-content inset div! -->
+        <div class="page-content inset">
 
-                <li <?php echo selected('blog', $selected); ?>>
-                  <a href="blog.php" title="Blog">
-                    <?php echo icon('bookmark', true) ?> Blog
-                  </a>
-                </li>
+    <?php
 
-                <!-- Add the links as needed -->
-                <?php echo $links; ?>
-
-                <!-- Also add admin links -->
-                <?php echo $adminLinks; ?>
-
-              </ul>
-              <!-- Add the right hand side menu, register and login -->
-              <?php echo $login; ?>
-          </div>
-        </div>
-    </div>
-  </div>
-  <div class="container">
+        if (!empty($title))
+        {
+          echo "<h1>$title</h1>";
+        }
+    ?>
 
     <?php
 
