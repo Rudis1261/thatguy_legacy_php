@@ -15,6 +15,9 @@ $(document).ready(function() {
     $("#menu-toggle").click(function(e) {
         e.preventDefault();
         $("#wrapper").toggleClass("active");
+        $("#menu-toggle").children('i').toggleClass("glyphicon-arrow-right");
+        $("#menu-toggle").toggleClass("active");
+        $("#menu-toggle").children('i').toggleClass("glyphicon-arrow-left");
     });
 
     // Unhide some things when their content changes

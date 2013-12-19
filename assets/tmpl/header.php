@@ -166,7 +166,7 @@ $menuAdmin      = array(
       <!-- Page content -->
       <div id="page-content-wrapper">
         <div class="content-header">
-            <div class="pull-left">
+            <div class="pull-left" style="margin-top: 0px;">
               <a id="menu-toggle" href="#" class="btn btn-default"><?php echo icon('arrow-right');?></a>
             </div>
             <div class="pull-right">
