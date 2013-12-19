@@ -27,6 +27,7 @@ switch($action)
         break;
 
     default:
+        $body .= $Portfolio->defaultView();
         break;
 }
 

@@ -119,6 +119,8 @@ $(document).ready(function() {
         text: "Are you sure you want to continue?"
     });
 
+    $('input[type=file]').bootstrapFileInput();
+    $('.file-inputs').bootstrapFileInput();
 
     // Hook into the confirm plugin for deletions
     $(".confirmDelete").confirm({

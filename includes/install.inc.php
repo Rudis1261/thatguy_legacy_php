@@ -202,6 +202,7 @@ if (($dbInstallDate !== $lastEdit) OR ($dbInstallFilesize !== $fileSize))
   addColumn("portfolio", '`type`', "INT(11) UNSIGNED", "default NULL");
   addColumn("portfolio", '`date`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`thumb`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`medium`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`large`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`name`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`desc`', "TEXT", "default NULL");
@@ -210,6 +211,7 @@ if (($dbInstallDate !== $lastEdit) OR ($dbInstallFilesize !== $fileSize))
   addColumn("portfolio", '`shutter`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`make`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`model`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`published`', "INT(1)", "default 0");
 
   // We will definitely need a meta page to be able to control the various metas in various aspects of our application
   createTable("meta", "id int(255) UNSIGNED NOT NULL", True, True);

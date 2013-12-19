@@ -5,4 +5,5 @@ $JS->add("cookies.js");
 $JS->add("jquery.js");
 $JS->add("bootstrap.js");
 $JS->add("jquery.confirm.js");
+$JS->add("bootstrap.file-input.js");
 $JS->add("custom.js");
