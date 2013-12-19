@@ -196,7 +196,30 @@ if (($dbInstallDate !== $lastEdit) OR ($dbInstallFilesize !== $fileSize))
   addColumn("options_users", '`key`', "varchar(65)", "default NULL");
   addColumn("options_users", 'value', "TEXT", "default ''");
 
-  // Create the first tv column we will need
+  // Portfolio
+  //dropTable("portfolio");
+  createTable("portfolio", "id int(11) UNSIGNED NOT NULL", True, True);
+  addColumn("portfolio", '`type`', "INT(11) UNSIGNED", "default NULL");
+  addColumn("portfolio", '`date`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`thumb`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`large`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`name`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`desc`', "TEXT", "default NULL");
+  addColumn("portfolio", '`iso`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`aperture`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`shutter`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`make`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`model`', "VARCHAR(65)", "default ''");
+
+  // We will definitely need a meta page to be able to control the various metas in various aspects of our application
+  createTable("meta", "id int(255) UNSIGNED NOT NULL", True, True);
+  addColumn("meta", '`active`', "int(1) UNSIGNED", "default 1");
+  addColumn("meta", '`type`', "varchar(255)", "default NULL");
+  addColumn("meta", '`name`', "text", "default NULL");
+  addColumn("meta", '`date`', "int(65) UNSIGNED", "default NULL");
+
+
+  // DROP IT LIKE IT'S HOT
   dropTable("tv");
   dropTable("tv_favorites");
   dropTable("tv_episode");

@@ -5,26 +5,25 @@ if(!defined('SPF'))
 	header('Location:/');
 	exit();
 }
-?>
 
-<div class="container">
-<?php
-	if ( ($Auth->loggedIn())
-	&& ($Auth->isAdmin()) )
+	if (($Auth->loggedIn()) AND ($Auth->isAdmin()))
 	{
 ?>
 
-<a href="blog_edit.php" class="btn btn-default btn-primary btn-lg">
-	<i class="glyphicon glyphicon-book glyphicon glyphicon-white"></i> Create New Blog
-</a>
+	<div class="pull-right">
+		<a href="blog_edit.php" class="btn btn-default btn-lg">
+			Create New Blog <?php echo icon("plus"); ?>
+		</a>
+	</div>
 
-<?php } ?>
-</div>
 
-<?php
+<?php }
+
 if ($Pager) echo $Pager;
 ?>
+
 <hr />
+
 <?php
 	$c = 1;
 	foreach($blogs as $id=>$blog)
@@ -62,27 +61,34 @@ if ($Pager) echo $Pager;
 
 ?>
 	<div class="row" id="<?php echo $id; ?>" style="margin-left: -15px; margin-right: -15px;<?php echo $style; ?>">
-		<div class="col-sm-2" align="center">
-			<h2>
-				<small>
-					<div align="center" style="background: url('assets/img/bookmark.jpg'); color: white; width: 64px; padding-top: 10px; height: 84px;">
-						<span><?php echo dater($blog['timestamp'], "d"); ?></span>
-						<br /><br />
-						<span><?php echo dater($blog['timestamp'], "M"); ?></span>
-					</div>
-				</small>
-			</h2>
-			<h4>
-				<small>
-					<span><?php echo dater($blog['timestamp'], "G:i"); ?></span>
-				</small>
-			</h4>
-			<h4>
-				<small>
-					<span>Written by <b><?php echo $username; ?></b></span>
-				</small>
-			</h4>
+		<div class="col-sm-2">
+			<div align="left" style="padding-top: 20px;">
+				<div class="pull-left">
 
+					<div class="blogBookmark">
+						<?php echo icon('bookmark') ?>
+					</div>
+
+					<div align="center" class="blogDate">
+						<b><?php echo dater($blog['timestamp'], "d"); ?></b>
+					</div>
+
+				</div>
+
+				<div align="left" class="blogMonth">
+					&nbsp;<?php echo dater($blog['timestamp'], "M"); ?>
+				</div>
+
+				<div align="left" style="blogTime">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo dater($blog['timestamp'], "G:i"); ?>
+				</div>
+
+				<div class="clearfix"></div>
+
+				<div align="left" class="blogAuthor">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>Written by <b><?php echo $username; ?></b></span>
+				</div>
+			</div>
 		</div>
 		<div class="col-sm-7">
 			<div>
@@ -94,10 +100,10 @@ if ($Pager) echo $Pager;
 ?>
 					<div class="btn-group pull-right">
 						<a class="btn btn-default" href="blog_edit.php?blog=<?php echo $id; ?>">
-							<i class="glyphicon glyphicon-pencil"></i> Edit Blog
+							<i class="glyphicon glyphicon-pencil"></i>
 						</a>
-						<a class="btn btn-default" href="blog.php?action=remove&blog=<?php echo $id; ?>">
-							<i class="glyphicon glyphicon-trash"></i> Delete Blog
+						<a class="btn btn-danger confirm" href="blog.php?action=remove&blog=<?php echo $id; ?>">
+							<i class="glyphicon glyphicon-trash"></i>
 						</a>
 					</div>
 <?php

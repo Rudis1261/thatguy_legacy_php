@@ -15,9 +15,9 @@ $(document).ready(function() {
     $("#menu-toggle").click(function(e) {
         e.preventDefault();
         $("#wrapper").toggleClass("active");
-        $("#menu-toggle").children('i').toggleClass("glyphicon-arrow-right");
+        $("#menu-toggle").children('i').toggleClass("glyphicon-align-justify");
         $("#menu-toggle").toggleClass("active");
-        $("#menu-toggle").children('i').toggleClass("glyphicon-arrow-left");
+        $("#menu-toggle").children('i').toggleClass("glyphicon-remove");
     });
 
     // Unhide some things when their content changes

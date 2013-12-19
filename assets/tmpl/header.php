@@ -10,29 +10,62 @@ if(!defined('SPF'))
 $Auth = Auth::getAuth();
 
 # Let's define the menus
+# Normal Menu
 $menu           = array(
-  "index.php"       => "Home " . icon('home'),
-  "portfolio.php"   => "Portfolio " . icon('camera'),
-  "blog.php"        => "Blog " . icon('bookmark'),
+  "index.php"       => "Home" . icon('home'),
+  "portfolio.php"   => "Portfolio" . icon('camera'),
+  "blog.php"        => "Blog" . icon('bookmark'),
 );
 
+# Logged Out Menu
 $menuLoggedOut  = array(
-  "contact.php"     => "Contact Us " . icon('send'),
-  "register.php"    => "Register " . icon('pencil'),
-  "login.php"       => "Login " . icon('user'),
+  "contact.php"     => "Contact Us" . icon('send'),
+  "register.php"    => "Register" . icon('pencil'),
+  "login.php"       => "Login" . icon('user'),
 );
 
+# Logged In Menu
 $menuLoggedin   = array(
-  "bugreport.php"   => "Report Bug " . icon('bullhorn'),
-  "settings.php"    => "Settings " . icon('cog'),
+  "bugreport.php"   => "Report Bug" . icon('bullhorn'),
   "devider"         => "",
-  "logout.php"      => "Logoff " . icon('off')
+  "settings.php"    => "Settings" . icon('cog'),
+  "logout.php"      => "Logoff" . icon('off')
 );
 
+# Administrator menu
 $menuAdmin      = array(
-  "users.php"       => "Users " . icon('user'),
-  "admin.php"       => "Admin " . icon('asterisk')
+  "users.php"       => "Users" . icon('user'),
+  "admin.php"       => "Admin" . icon('asterisk'),
+  "index.php?action=meta&type=portfolio_types" => "Portfolio Types" . icon('camera')
 );
+
+
+# I want to make this more generic
+function displayMenu($menuList)
+{
+  # Check if the selected was implied?
+  $selected = script_name() ? script_name() : "";
+
+  # Loop through the menus and create the links
+  foreach((array)$menuList as $script=>$name)
+  {
+    # I like using turnareys for this type of stuff
+    $class = ($script == "index.php") ? "sidebar-brand" : "sidebar";
+    $class = (($script == $selected) AND ($script !== "index.php")) ? $class . " active" : $class;
+
+    # is the menu item an actual entry?
+    if ($script !== "devider")
+    {
+      echo '<li class="' . $class . '"><a href="' . $script . '">' . $name . '</a></li>';
+    }
+
+    # or is it a devider?
+    else
+    {
+      echo '<li class="devider">&nbsp;</li>';
+    }
+  }
+}
 
 ?>
 <!DOCTYPE html>
@@ -82,52 +115,30 @@ $menuAdmin      = array(
       <div id="sidebar-wrapper">
         <ul class="sidebar-nav">
     <?php
-          # Check if the selected was implied?
-          $selected = script_name() ? script_name() : "";
-
+          # Let's determine when which menu should be displayed
           ##############################
           # LOGGED IN USER
           ##############################
           if ($Auth->loggedIn())
           {
+            # Default menu
             echo "<h3>Welcome $Auth->username</h3>";
+            displayMenu($menu);
 
-            # Loop through the menus and create the links
-            foreach($menu as $script=>$name)
-            {
-              # I like using turnareys for this type of stuff
-              $class = ($script == "index.php") ? "sidebar-brand" : "sidebar";
-              $class = (($script == $selected) AND ($script !== "index.php")) ? $class . " active" : $class;
-
-              echo '<li class="' . $class . '"><a href="' . $script . '">' . $name . '</a></li>';
-            }
-
-            # Loop through the menus and create the links
-            foreach($menuLoggedin as $script=>$name)
-            {
-              # I like using turnareys for this type of stuff
-              $class = ($script == "index.php") ? "sidebar-brand" : "sidebar";
-              $class = (($script == $selected) AND ($script !== "index.php")) ? $class . " active" : $class;
-
-              echo '<li class="' . $class . '"><a href="' . $script . '">' . $name . '</a></li>';
-            }
+            # Logged In Menu
+            displayMenu($menuLoggedin);
 
             ##############################
             # ADMIN USER
             ##############################
             if ($Auth->isAdmin())
             {
+              echo '<li class="devider">&nbsp;</li>';
               echo "<div id='sidebar-admin'>
                       <h3>Administration</h3>";
-              # Loop through the menus and create the links
-              foreach($menuAdmin as $script=>$name)
-              {
-                # I like using turnareys for this type of stuff
-                $class = ($script == "index.php") ? "sidebar-brand" : "sidebar";
-                $class = (($script == $selected) AND ($script !== "index.php")) ? $class . " active" : $class;
 
-                echo '<li class="' . $class . '"><a href="' . $script . '">' . $name . '</a></li>';
-              }
+              # Admin menu
+              displayMenu($menuAdmin);
               echo "</div>";
             }
           }
@@ -137,27 +148,12 @@ $menuAdmin      = array(
           ##############################
           else
           {
+            # Default user
             echo "<h3>Welcome Guest</h3>";
+            displayMenu($menu);
 
-            # Loop through the menus and create the links
-            foreach($menu as $script=>$name)
-            {
-              # I like using turnareys for this type of stuff
-              $class = ($script == "index.php") ? "sidebar-brand" : "sidebar";
-              $class = (($script == $selected) AND ($script !== "index.php")) ? $class . " active" : $class;
-
-              echo '<li class="' . $class . '"><a href="' . $script . '">' . $name . '</a></li>';
-            }
-
-            # Loop through the menus and create the links
-            foreach($menuLoggedOut as $script=>$name)
-            {
-              # I like using turnareys for this type of stuff
-              $class = ($script == "index.php") ? "sidebar-brand" : "sidebar";
-              $class = (($script == $selected) AND ($script !== "index.php")) ? $class . " active" : $class;
-
-              echo '<li class="' . $class . '"><a href="' . $script . '">' . $name . '</a></li>';
-            }
+            # NON-User menu
+            displayMenu($menuLoggedOut);
           }
     ?>
         </ul>
@@ -167,7 +163,7 @@ $menuAdmin      = array(
       <div id="page-content-wrapper">
         <div class="content-header">
             <div class="pull-left" style="margin-top: 0px;">
-              <a id="menu-toggle" href="#" class="btn btn-default"><?php echo icon('arrow-right');?></a>
+              <a id="menu-toggle" href="#" class="btn btn-default"><?php echo icon('align-justify');?> Menu</a>
             </div>
             <div class="pull-right">
               <span class="pull-left">
@@ -198,11 +194,9 @@ $menuAdmin      = array(
       // Display the error messages
       if ($msg)
       {
-        echo "<div class='container'>
-                <div class='row'>
+        echo "<div class='row'>
                   <div class='col-sm-6'>
                   " . $msg . "
                   </div>
-                </div>
               </div>";
       }

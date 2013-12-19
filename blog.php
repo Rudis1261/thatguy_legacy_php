@@ -25,6 +25,10 @@ $JS->add('prettify.js');
 $JS->output('blog.js');
 $JS->export();
 
+$CSS->add('blog.css');
+$CSS->output('blog.css');
+$CSS->export();
+
 // Variables
 $blogList = array();
 $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
@@ -72,7 +76,7 @@ foreach($Blogs as $blog)
 
 Template::setBaseDir('./assets/tmpl');
 $html = Template::loadTemplate('layout', array(
-	'header'=>Template::loadTemplate('header', array('title'=>$title,'user'=>$user,'admin'=>$isadmin,'msg'=>$msg, 'selected'=>'blog', 'Auth'=>$Auth)),
+	'header'=>Template::loadTemplate('header', array('title'=>$title,'user'=>$user,'admin'=>$isadmin,'msg'=>$msg, 'selected'=>'blog', 'Auth'=>$Auth, "CSS"=>$CSS->output())),
 	'content'=>Template::loadTemplate('blog', array('errorClass'=>$errorClass, 'inputValue'=>$inputValue, 'Auth'=>$Auth, 'admin'=>$isadmin, 'Pager'=>$paging, 'blogs'=>$blogList)),
 	'footer'=>Template::loadTemplate('footer',array('time_start'=>$time_start, 'javascript'=>$JS->output()))
 ));
