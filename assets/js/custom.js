@@ -122,7 +122,8 @@ $(document).ready(function() {
 
     // Hook into the confirm plugin for deletions
     $(".confirmDelete").confirm({
-        text: "Are you sure you want to continue deleting this entry?"
+        text: "Are you sure you want to continue deleting this entry?",
+        post: true
     });
 
 

@@ -26,15 +26,16 @@ if ($Pager) echo $Pager;
 
 <?php
 	$c = 1;
+
 	foreach($blogs as $id=>$blog)
 	{
-		$u = new User($blog['user_id']);
-		$offset = ((isset($_GET['offset'])) and (is_numeric($_GET['offset']))) ? $_GET['offset'] : 0;
-		$current = ((isset($_GET['blog_id'])) and (is_numeric($_GET['blog_id']))) ? $_GET['blog_id'] : false;
+		$u 				= new User($blog['user_id']);
+		$offset 		= ((isset($_GET['offset'])) and (is_numeric($_GET['offset']))) ? $_GET['offset'] : 0;
+		$current 		= ((isset($_GET['blog_id'])) and (is_numeric($_GET['blog_id']))) ? $_GET['blog_id'] : false;
 
-		$min = 0;
-		$max = 10;
-		$limit = 10;
+		$min 			= 0;
+		$max 			= 10;
+		$limit 			= 10;
 
 		if ($id == $current)
 		{
@@ -42,14 +43,17 @@ if ($Pager) echo $Pager;
 			$max = $offset + $limit;
 		}
 
-		$comments = Blog::comments_get($id);
+		$comments 		= Blog::comments_get($id);
 		$count_comments = (Blog::comments_get($id) > 1) ? count(Blog::comments_get($id)) : 'No ';
 
 		// Lets check if they have a first name set otherise display their username
 		if (Options::userExists($blog['user_id'], 'firstName'))
 		{
 			$username = Options::userGet($blog['user_id'], 'firstName');
-		} else {
+		}
+
+		else
+		{
 			$username = $u->username;
 		}
 
@@ -61,7 +65,7 @@ if ($Pager) echo $Pager;
 
 ?>
 	<div class="row" id="<?php echo $id; ?>" style="margin-left: -15px; margin-right: -15px;<?php echo $style; ?>">
-		<div class="col-sm-2">
+		<div class="col-md-2" style="min-width: 180px;">
 			<div align="left" style="padding-top: 20px;">
 				<div class="pull-left">
 
@@ -79,8 +83,9 @@ if ($Pager) echo $Pager;
 					&nbsp;<?php echo dater($blog['timestamp'], "M"); ?>
 				</div>
 
-				<div align="left" style="blogTime">
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo dater($blog['timestamp'], "G:i"); ?>
+				<div align="left" class="blogTime">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<b><?php echo dater($blog['timestamp'], "G:i"); ?></b>
 				</div>
 
 				<div class="clearfix"></div>
@@ -94,15 +99,14 @@ if ($Pager) echo $Pager;
 			<div>
 
 <?php
-	if (($admin)
-	or ($Auth->id == $u->id))
+	if (($admin) OR ($Auth->id == $u->id))
 	{
 ?>
 					<div class="btn-group pull-right">
 						<a class="btn btn-default" href="blog_edit.php?blog=<?php echo $id; ?>">
 							<i class="glyphicon glyphicon-pencil"></i>
 						</a>
-						<a class="btn btn-danger confirm" href="blog.php?action=remove&blog=<?php echo $id; ?>">
+						<a class="btn btn-danger confirmDelete" href="blog.php?action=remove&blog=<?php echo $id; ?>">
 							<i class="glyphicon glyphicon-trash"></i>
 						</a>
 					</div>
@@ -147,16 +151,17 @@ if ($Pager) echo $Pager;
 		$i = 0;
 		foreach($comments as $cid=>$comment)
 		{
-			if (($i >= $min)
-			&& ($i <= $max))
+			if (($i >= $min) AND ($i <= $max))
 			{
-				if (($admin)
-				or ($Auth->id == $comment['user_id']))
+				if (($admin) OR ($Auth->id == $comment['user_id']))
 				{
 					$allowed = true;
 					$adminClass = "class='editDiv'";
 					$deleteLink = " <a class='btn btn-default btn-xs btn-danger'  href='?action=delete_comment&id=" . $cid . "'>Delete</a>";
-				} else {
+				}
+
+				else
+				{
 					$allowed = false;
 					$adminClass = "";
 					$deleteLink = '';

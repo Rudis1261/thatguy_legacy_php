@@ -5,5 +5,3 @@ $CSS->add("prettify.css");
 $CSS->add("bootstrap.css");
 $CSS->add("bootstrap-responsive.css");
 $CSS->add("custom.css");
-
-?>

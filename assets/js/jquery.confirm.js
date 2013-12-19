@@ -72,10 +72,20 @@
 			+ options.confirmButton + '</button>'
 			+ '<button class="cancel btn" type="button" data-dismiss="modal">'
 			+ options.cancelButton + '</button>';
-		var modalHTML = '<div class="modal hide fade" tabindex="-1" role="dialog">'
-			+ '<div class="modal-body">' + options.text + '</div>'
-			+ '<div class="modal-footer">' + buttons + '</div>'
-			+ '</div>';
+var modalHTML = '<div class="modal fade">'
+	+ '<div class="modal-dialog">'
+	+ '<div class="modal-content">'
+	+ '<div class="modal-header">'
+	+ '<a href="#" class="close" data-dismiss="modal">'
+	+ '<span style="color: white;" class="glyphicon glyphicon-remove"></span>'
+	+ '</a>'
+	+ '<h4 class="modal-title">Please confirm</h4>'
+	+ '</div>'
+	+ '<div class="modal-body">' + options.text + '</div>'
+	+ '<div class="modal-footer">' + buttons + '</div>'
+	+ '</div>'
+	+ '</div>'
+	+ '</div>';
 
 		var modal = $(modalHTML);
 

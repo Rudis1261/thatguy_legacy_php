@@ -1,10 +1,12 @@
 .blogBookmark {
+
   font-size: 60px;
   line-height: 60px;
   color: #8c0000;
 }
 
 .blogDate {
+
   font-size: 20px;
   line-height: 22px;
   height: 60px;
@@ -14,16 +16,22 @@
 }
 
 .blogMonth {
+
   font-size: 40px;
   line-height: 45px;
+  color: #353535;
 }
 
 .blogTime {
+
   font-size: 16px;
   line-height: 20px;
+  color: #353535;
 }
 
 .blogAuthor {
+
   font-size: 14px;
   line-height: 14px;
+  color: #353535;
 }

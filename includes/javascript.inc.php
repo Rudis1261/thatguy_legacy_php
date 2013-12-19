@@ -6,5 +6,3 @@ $JS->add("jquery.js");
 $JS->add("bootstrap.js");
 $JS->add("jquery.confirm.js");
 $JS->add("custom.js");
-
-?>
