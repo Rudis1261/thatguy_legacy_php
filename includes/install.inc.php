@@ -199,16 +199,14 @@ if (($dbInstallDate !== $lastEdit) OR ($dbInstallFilesize !== $fileSize))
   // Portfolio
   //dropTable("portfolio");
   createTable("portfolio", "id int(11) UNSIGNED NOT NULL", True, True);
-  addColumn("portfolio", '`type`', "INT(11) UNSIGNED", "default NULL");
-  addColumn("portfolio", '`date`', "VARCHAR(65)", "default ''");
-  addColumn("portfolio", '`thumb`', "VARCHAR(65)", "default ''");
-  addColumn("portfolio", '`medium`', "VARCHAR(65)", "default ''");
-  addColumn("portfolio", '`large`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`type`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`timestamp`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`image`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`name`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`desc`', "TEXT", "default NULL");
   addColumn("portfolio", '`iso`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`aperture`', "VARCHAR(65)", "default ''");
-  addColumn("portfolio", '`shutter`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`exposure`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`make`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`model`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`published`', "INT(1)", "default 0");

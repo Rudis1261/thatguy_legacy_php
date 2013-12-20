@@ -11,19 +11,22 @@
 
         public $types;
         public $file_types;
+        public $images;
+        public $unpublished;
+        public $imgErrors;
+
         public $script      = "portfolio.php";
         public $path        = "uploads/";
         public $pathThumb   = "uploads/thumb/";
         public $pathMedium  = "uploads/medium/";
         public $pathLarge   = "uploads/large/";
-        public $imgErrors;
 
 
         # We will be creating another instance of the portfolio class and construct it
         public function __construct($id = null)
         {
             # Construct the parent
-            $columns = array("id", "type", "thumb", "medium", "large", "name", "desc", "iso", "aperture", "shutter", "make", "model", "published");
+            $columns = array("id", "type", "image", "name", "desc", "iso", "aperture", "exposure", "make", "model", "published", "timestamp");
             parent::__construct('portfolio', $columns, $id);
 
             # Hook into the meta and get the types
@@ -51,6 +54,32 @@
                 4=>"No file was uploaded",
                 6=>"Missing a temporary folder"
             );
+
+            # Select the images from the db
+            $this->db->query("SELECT `" . implode("`, `", $columns) . "` FROM portfolio");
+
+            # Get the results
+            $results = $this->db->getRows();
+
+            # Ensure that the db actually contained something
+            if (!empty($results))
+            {
+                # Loop through all the images
+                foreach($results as $res)
+                {
+                    # Was the image already published?
+                    if ($res['published'])
+                    {
+                        $this->images[$res['id']]       = $res;
+                    }
+
+                    # Nope, add it to the pile to publish
+                    else
+                    {
+                        $this->unpublished[$res['id']]  = $res;
+                    }
+                }
+            }
         }
 
 
@@ -66,6 +95,36 @@
                 $out .= $this->upload();
             }
 
+            # Display the publisher, should there be images which require further details to be completed
+            if (!empty($this->unpublished))
+            {
+                $out .= $this->publisher();
+            }
+
+            return $out;
+        }
+
+
+        # The publisher is the page which will be used to complete the image details
+        public function publisher()
+        {
+            # Start the output
+            $out = "";
+
+            # Ensure that there are unpublished images to work with
+            if (!empty($this->unpublished))
+            {
+                $counter    = 0;
+
+                # loop through them
+                foreach($this->unpublished as $image)
+                {
+                    $out .= '<span style="padding-right: 10px; line-height: 185px;">
+                                <img class="img-thumbnail" src="' . $this->pathThumb . $image['image'] . '" alt=""/>
+                            </span>';
+                    $counter += 1;
+                }
+            }
             return $out;
         }
 
@@ -147,20 +206,51 @@
                     # Move the image and create the different sizes
                     move_uploaded_file($imgTmpName, $this->path . $imgNewName) or die ("Could not move image " . $imgNewName . " to " . $this->path);
 
-                    # Load the image into GD and resize it to the 3 sizes
-                    $GD     = new GD($imgNewName);
+                    # What size options do we have?
                     $sizes  = array(
-                        "pathThumb"     => array("w"=>250, "h"=>160),
-                        "pathMedium"    => array("w"=>960, "h"=>600),
-                        "pathLarge"     => array("w"=>2560, "h"=>1920)
+                        "pathLarge"     => array("w"=>2560, "h"=>1920, "q"=>85),
+                        "pathMedium"    => array("w"=>960, "h"=>600, "q"=>85),
+                        "pathThumb"     => array("w"=>250, "h"=>160, "q"=>90)
                     );
 
                     # Loop through the sizes
                     foreach($sizes as $type=>$dimension)
                     {
-                        // cropCentered($w, $h)
-                        $GD->cropCentered($dimension['w'], $dimension['h']);
+                        # Load the image into GD and resize it to the 3 sizes
+                        $GD = new GD($this->path . $imgNewName);
+
+                        # Resize the image to the resolution
+                        $GD->resizeToResolution(
+                            $dimension['w'],
+                            $dimension['h'],
+                            $dimension['q'],
+                            true
+                        );
+
+                        # Save the actual image
                         $GD->saveAs($this->$type . $imgNewName);
+                    }
+
+                    # Build info array
+                    $info                   = array();
+                    $info['image']          = $imgNewName;
+                    $info['name']           = "";
+                    $info['desc']           = "";
+                    $info['iso']            = $exif['iso'];
+                    $info['aperture']       = $exif['aperture'];
+                    $info['exposure']       = $exif['exposure'];
+                    $info['make']           = $exif['make'];
+                    $info['model']          = $exif['model'];
+                    $info['published']      = 0;
+                    $info['timestamp']      = time();
+
+                    # Write it to the DB
+                    $write = $this->write($info);
+
+                    # If successful, delete the image
+                    if ($write !== false)
+                    {
+                        unlink($this->path . $imgNewName);
                     }
                 }
 
@@ -245,7 +335,7 @@
         public function clean()
         {
             # Select all the images from the database
-            $this->db->query("SELECT `id`, `thumb`, `medium`, `large`, `published` FROM portfolio");
+            $this->db->query("SELECT `id`, `image`, `published` FROM portfolio");
 
             # Ensure we got something
             $images = $this->db->getRows();
@@ -260,25 +350,28 @@
                     if ($image['published'] == 0)
                     {
                         # First the thumbnail
-                        if (file_exists($image['thumb']))
+                        if (file_exists($this->pathThumb . $image['image']))
                         {
-                            unlink($image['thumb']);
+                            unlink($this->pathThumb . $image['image']);
                         }
 
                         # Then the medium image
-                        if (file_exists($image['medium']))
+                        if (file_exists($this->pathMedium . $image['image']))
                         {
-                            unlink($image['medium']);
+                            unlink($this->pathMedium . $image['image']);
                         }
 
                         # Lastly the large image
-                        if (file_exists($image['large']))
+                        if (file_exists($this->pathLarge . $image['image']))
                         {
-                            unlink($image['large']);
+                            unlink($this->pathLarge . $image['image']);
                         }
 
                         # Now delete the image from the DB
-                        $this->db->query("DELETE FROM portfolio WHERE id=" . $this->db->quote($image['id'])) or die ("Could not delete image " . $image['thumbnail']);
+                        $this->db->query("DELETE FROM portfolio WHERE id=" . $this->db->quote($image['id'])) or die ("Could not delete image " . $image['image']);
+
+                        # Let's show what where doing
+                        echo "Deleted unpublished image " . $image['image'] . PHP_EOL;
 
                         # And then unset the index from the images array
                         unset($images[$index]);
@@ -305,19 +398,17 @@
             $p              = new Portfolio($id);
 
             # Update the details
-            $p->type        = json_encode($info['type']);
-            $p->thumb       = $this->$pathThumb . $info['image'];
-            $p->medium      = $this->$pathMedium . $info['image'];
-            $p->large       = $this->$pathLarge . $info['image'];
+            $p->type        = (isset($info['type'])) ? json_encode($info['type']) : "";
+            $p->image       = $info['image'];
             $p->name        = $info['name'];
             $p->desc        = $info['desc'];
             $p->iso         = $info['iso'];
             $p->aperture    = $info['aperture'];
-            $p->shutter     = $info['shutter'];
+            $p->exposure    = $info['exposure'];
             $p->make        = $info['make'];
             $p->model       = $info['model'];
             $p->published   = $info['published'];
-            $p->date        = time();
+            $p->timestamp   = $info['timestamp'];
 
             # Check whether we should be inserting
             if (is_null($id))

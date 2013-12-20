@@ -9,6 +9,7 @@
         public $mime   = null;
         public $images = array();
 
+
         public function __construct($data = null, $ext = null)
         {
             if(is_resource($data) && get_resource_type($data) == 'gd')
@@ -21,6 +22,7 @@
                 return false;
         }
 
+
         private function loadResource($im)
         {
             if(!is_resource($im) || !get_resource_type($im) == 'gd') return false;
@@ -31,6 +33,7 @@
 
             return true;
         }
+
 
         private function loadFile($filename)
         {
@@ -54,11 +57,13 @@
             return true;
         }
 
+
         private function loadString($str)
         {
             $im = @imagecreatefromstring($str);
             return ($im === false) ? false : $this->loadResource($im);
         }
+
 
         public function saveAs($filename, $type = 'jpg', $quality = 75)
         {
@@ -74,6 +79,7 @@
             else
                 return false;
         }
+
 
         // Output file to browser
         public function output($type = 'jpg', $quality = 75)
@@ -100,6 +106,7 @@
                 return false;
         }
 
+
         // Return image data as a string.
         // Is there a way to do this without using output buffering?
         public function toString($type = 'jpg', $quality = 75)
@@ -115,6 +122,7 @@
 
             return ob_get_clean();
         }
+
 
         // Resizes an image and maintains aspect ratio.
         public function scale($new_width = null, $new_height = null)
@@ -136,6 +144,7 @@
             return $this->resize($new_width, $new_height);
         }
 
+
         // Resizes an image to an exact size
         public function resize($new_width, $new_height)
         {
@@ -156,6 +165,7 @@
             return false;
         }
 
+
         public function crop($x, $y, $w, $h)
         {
             $dest = imagecreatetruecolor($w, $h);
@@ -171,6 +181,7 @@
             return false;
         }
 
+
         public function cropCentered($w, $h)
         {
             $cx = $this->width / 2;
@@ -181,6 +192,7 @@
             if($y < 0) $y = 0;
             return $this->crop($x, $y, $w, $h);
         }
+
 
         public function availableWallpapers() // returns an array of possible resolutions
         {
@@ -210,40 +222,51 @@
             }
         }
 
+
         public function resizeToResolution($width, $height, $quality=85, $save=false)
         {
+            # Ensure that the image is large enough to scale
             if (($this->width >= $width) AND ($this->height >= $height))
             {
-                $resolution_aspect = round($width / $height, 2);
-                $image_aspect = round($this->width / $this->height, 2);
+                # Get the aspect ratios
+                $resolution_aspect  = round($width / $height, 2);
+                $image_aspect       = round($this->width / $this->height, 2);
 
+                # Scale according to the height
                 if ($resolution_aspect <= $image_aspect)
                 {
                     $this->scale(null, $height);
                 }
 
+                # Scale according to width
                 else
                 {
                     $this->scale($width, null);
                 }
 
+                # Crop the center
                 $this->cropCentered($width, $height);
-                if ($save == false) $this->output('jpg', $quality);
 
+                # We are not saving the image, so let's output it directly to the browser
+                if ($save == false)
+                {
+                    $this->output('jpg', $quality);
+                }
             }
             return false;
         }
 
-        // Bluid a collage using the GD function
+
+        // Build a collage using the GD function
         public function collage($width, $height, $quality=85)
         {
             if (count($this->images) == 0) return false;
 
-            $count = count($this->images);
-            $vert_parts = 1;
-            $horz_parts = 1;
-            $max_width = 3;
-            $found = false;
+            $count          = count($this->images);
+            $vert_parts     = 1;
+            $horz_parts     = 1;
+            $max_width      = 3;
+            $found          = false;
 
             // Up to three images we won't be able to tile really, so lets tile them vertically
             if ($count<=$max_width)
@@ -270,13 +293,13 @@
                 }
             }
 
-            $imHeight = ceil(round($height / $vert_parts, 2));
-            $imWidth = ceil(round($width / $horz_parts, 2));
-            $canvas = imagecreatetruecolor($width, $height);
-            $offsetX = 0;
-            $offsetY = 0;
-            $c = 0;
-            $row = 0;
+            $imHeight       = ceil(round($height / $vert_parts, 2));
+            $imWidth        = ceil(round($width / $horz_parts, 2));
+            $canvas         = imagecreatetruecolor($width, $height);
+            $offsetX        = 0;
+            $offsetY        = 0;
+            $c              = 0;
+            $row            = 0;
 
             for($i=0; $i<($horz_parts * $vert_parts); $i++)
             {
@@ -310,6 +333,7 @@
                 </div>";
             return true;
         }
+
 
         // Bluid a collage using the GD function, This adds to the images array which we will use to build the collage
         public function collageLoadFile($filename)

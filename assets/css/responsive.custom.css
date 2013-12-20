@@ -1,0 +1,36 @@
+@media (min-width: 1200px) {
+
+    .row {
+        margin-left: -15px;
+        *zoom: 1;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 979px) {
+
+    .row {
+        margin-left: -10px;
+        *zoom: 1;
+    }
+
+    .page-content {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
+@media (max-width: 767px) {
+
+    body {
+        padding: 0px;
+    }
+
+    .content-header {
+        padding-right: 10px;
+        padding-left: 0px;
+    }
+    .page-content {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}

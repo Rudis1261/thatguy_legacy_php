@@ -26,6 +26,11 @@ switch($action)
     case "write":
         break;
 
+    case "clean":
+        $Portfolio->clean();
+        exit();
+        break;
+
     default:
         $body .= $Portfolio->defaultView();
         $msg = $Error->alert();
