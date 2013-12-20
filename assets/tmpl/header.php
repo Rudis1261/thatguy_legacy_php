@@ -93,14 +93,16 @@ function displayMenu($menuList)
     	if (isset($CSS))
     	{
     		echo $CSS . "?t=" .  Cache::modified($CSS);
-    	} else {
+    	}
+
+      else
+      {
     		require DOC_ROOT . '/includes/css.inc.php';
     		$CSS->output('style.css');
     		$CSS->export();
     		echo $CSS->output() . "?t=" .  Cache::modified($CSS->output());
     	}
     ?>">
-    <!--<link rel="stylesheet" href="assets/css/bootstrap-responsive.css">-->
     <link rel="stylesheet" href="assets/css/responsive.custom.css">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->

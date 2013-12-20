@@ -119,7 +119,7 @@
                 # loop through them
                 foreach($this->unpublished as $image)
                 {
-                    $out .= '<span style="padding-right: 10px; line-height: 185px;">
+                    $out .= '<span class="portfolioTiles">
                                 <img class="img-thumbnail" src="' . $this->pathThumb . $image['image'] . '" alt=""/>
                             </span>';
                     $counter += 1;

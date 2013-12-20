@@ -264,7 +264,7 @@
     function select($name, $array, $default=null, $class='', $useKeys=false, $multiple=false)
     {
         $multiple = ($multiple !== false) ? ' multiple ' : '';
-        $out = tab() . "<select class='input-sm from-control " . $class . "' " . $multiple . " name='" . $name . "'>" . nl();
+        $out = tab() . "<select class='input-sm form-control " . $class . "' " . $multiple . " name='" . $name . "'>" . nl();
         $out .= array2options($array, $default, $useKeys);
         $out .= tab() . "</select>";
         return $out;
@@ -392,33 +392,33 @@
         if(!is_null($prefix)) $prefix .= '_';
         list($yval, $mval, $dval) = explode(' ', date('Y n j', $date));
 
-        $month_dd = "<select class='input-sm from-control' name='{$prefix}month' id='{$prefix}month'>" . nl();
+        $month_dd = "<div class='col-sm-2'><select class='input-sm form-control' name='{$prefix}month' id='{$prefix}month'>" . nl();
         for($i = 1; $i <= 12; $i++)
         {
             $selected = ($mval == $i) ? ' selected="selected"' : '';
             $month_dd .= "<option value='$i'$selected>" . date('F', mktime(0, 0, 0, $i, 1, 2000)) . "</option>" . nl();
         }
-        $month_dd .= "</select>" . nl();
+        $month_dd .= "</select></div>" . nl();
 
-        $day_dd = "<select class='input-sm from-control' name='{$prefix}day' id='{$prefix}day'>" . nl();
+        $day_dd = "<div class='col-sm-1'><select class='input-sm form-control' name='{$prefix}day' id='{$prefix}day'>" . nl();
         for($i = 1; $i <= 31; $i++)
         {
             $selected = ($dval == $i) ? ' selected="selected"' : '';
             $day_dd .= "<option value='$i'$selected>$i</option>" . nl();
         }
-        $day_dd .= "</select>" . nl();
+        $day_dd .= "</select></div>" . nl();
 
-        $year_dd = "<select class='input-sm from-control' name='{$prefix}year' id='{$prefix}year'>" . nl();
+        $year_dd = "<div class='col-sm-1'><select class='input-sm form-control' name='{$prefix}year' id='{$prefix}year'>" . nl();
         for($i = (date('Y')-100); $i < date('Y') + 10; $i++)
         {
             $selected = ($yval == $i) ? ' selected="selected"' : '';
             $year_dd .= "<option value='$i'$selected>$i</option>" . nl();
         }
-        $year_dd .= "</select>" . nl();
+        $year_dd .= "</select></div>" . nl();
 
         $trans  = array('m' => $month_dd, 'd' => $day_dd, 'y' => $year_dd);
         $result = strtr($output_format, $trans);
-        return "<div class='clearfix'></div>" . $result;
+        return "<div class='row form-group'>" . $result . "</div><div class='clearfix'></div>";
     }
 
     // This function will create a bool_selection box with a true or false value
@@ -430,7 +430,7 @@
         $selectedNone = ($value === "none") ? " selected " : "";
 
         $out = "<div class='clearfix'></div>";
-        $out .= '<select class="input-sm from-control" name="' . $name . '">' . nl();
+        $out .= '<select class="input-sm form-control" name="' . $name . '">' . nl();
         $out .= ($addEmpty !== false) ? '<option ' . $selectedNone .  ' value="blank"></option>' . nl(): "";
         $out .= '   <option ' . $selectedFalse .  ' value="0">No</option>' . nl();
         $out .= '   <option ' . $selectedTrue . ' value="1">Yes</option>' . nl();
