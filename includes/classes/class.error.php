@@ -106,14 +106,22 @@
                 $out = '';
                 foreach($_SESSION['error'] as $type=>$error)
                 {
-                    if ($type == strtolower('error')) {
+                    if ($type == strtolower('error'))
+                    {
                         $addError = '<strong>ERROR</strong><br />';
-                    } else {
+                    }
+
+                    else
+                    {
                         $addError = '';
                     }
+
                     $addClass = ($type == "info") ? "info" : "danger";
-                    $out .= "<div class='alert alert-".$addClass."'>
-                            <a class='close' data-dismiss='alert' href='#'>&times;</a>" . $addError . implode('<br />', $error) . "</div>";
+
+                    $out .= "<div class='alert alert-" . $addClass . "'>
+                                <a class='close' data-dismiss='alert' href='#'>" . icon('remove', true) . "</a>"
+                                . $addError . implode('<br />', $error) .
+                            "</div>";
                 }
                 unset($_SESSION['error']);
                 return $out;

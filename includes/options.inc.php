@@ -38,11 +38,11 @@ Options::add('filesize', $fileSize, 'hidden', 'Miscellaneous'); // Do not modify
 
 // These would be the options you want to set, it will first
 // Site
-Options::addOnce('siteName', 'http://www.TV Tracker.co.za', 'input', 'Website Settings');
+Options::addOnce('siteName', 'http://www.ThatGuy.co.za', 'input', 'Website Settings');
 Options::addOnce('siteLogo', 'assets/img/logo.png', 'input', 'Website Settings');
 Options::addOnce('siteIcon', 'assets/img/icon.png', 'input', 'Website Settings');
 Options::addOnce('homePageFrom', '2 weeks ago', 'input', 'Website Settings');
-Options::addOnce('prettyName', '<small>www.</small>TV Tracker<small>.co.za</small>', 'input', 'Website Settings');
+Options::addOnce('prettyName', '<small>www.</small>ThatGuy<small>.co.za</small>', 'input', 'Website Settings');
 Options::remove('homePageTileHeight');//, '220', 'input', 'Website Settings');
 Options::remove('maxOverViewChars');//, '80', 'input', 'Website Settings');
 Options::addOnce('dateFormatFull', "d F Y H:i", 'input', 'Website Settings');
@@ -52,9 +52,9 @@ Options::addOnce('maxLoginAttempts', "7", 'input', 'Website Settings');
 Options::addOnce('loginRetyTime', "10", 'input', 'Website Settings');
 
 // Email Templates
-Options::addOnce('emailName', 'www.TVTracker.co.za', 'input', 'Email Templates');
-Options::addOnce('emailInfo','info@tvtracker.co.za', 'input', 'Email Templates');
-Options::addOnce('emailAdmin', 'admin@tvtracker.co.za', 'input', 'Email Templates');
+Options::addOnce('emailName', 'www.ThatGuy.co.za', 'input', 'Email Templates');
+Options::addOnce('emailInfo','info@thatguy.co.za', 'input', 'Email Templates');
+Options::addOnce('emailAdmin', 'admin@thatguy.co.za', 'input', 'Email Templates');
 
 // META Data
 Options::addOnce('metaAuthor', 'Rudi Strydom', 'input', 'META Data');
@@ -72,6 +72,14 @@ Options::addOnce('facebookTitle', 'FB Page title', 'input', 'META Data');
 Options::addOnce('collageImages', '9', 'input', 'Portfolio Settings');
 Options::addOnce('collageWidth', '500', 'input', 'Portfolio Settings');
 Options::addOnce('collageHeight', '350', 'input', 'Portfolio Settings');
+
+/*Options::addOnce('imageLargeWidth', '2560x1920', 'input', 'Portfolio Settings');
+Options::addOnce('imageMediumWidth', '960x600', 'input', 'Portfolio Settings');
+Options::addOnce('imageThumbWidth', '250x156', 'input', 'Portfolio Settings');*/
+Options::remove('imageLargeWidth');
+Options::remove('imageMediumWidth');
+Options::remove('imageThumbWidth');
+
 
 // User Settings, visible in their Settings.php page. This will be in addition to their email and password
 // The values here would be the default settings shown in their console

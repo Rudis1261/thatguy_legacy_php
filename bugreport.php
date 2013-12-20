@@ -15,8 +15,7 @@ $formzy = new Form(array("enctype"=>"multipart/form-data"));
 $formzy->addText(array("name"=>"desc", "label"=>"Short Description", "validation"=>array("long"=>3)));
 $formzy->addTextarea(array("name"=>"longdesc", "label"=>"Let us more", "validation"=>array("long"=>10)));
 $formzy->addCustom('<div class="form-group">
-                        <label class="control-label">Attach Images (Optional)</label>
-                        <input type="file" name="upload[]" multiple />
+                        <input type="file" title="Upload a screenshot" name="upload[]" icon="picture" multiple />
                     </div>');
 $formzy->addSubmit(array("name"=>"submit", "value"=>"Report bug"));
 $form = $formzy->render();

@@ -30,9 +30,22 @@ $.fn.bootstrapFileInput = function() {
       buttonWord = $elem.attr('title');
     }
 
+
+
+    // Allow for an optional icon
+    var icon = '';
+
+    if (typeof $elem.attr('icon') != 'undefined') {
+      var iconType = $elem.attr('icon');
+      icon = '&nbsp;&nbsp;<span class="glyphicon glyphicon-' + iconType + '"></span>';
+    }
+
+
+
     // Start by getting the HTML of the input element.
     // Thanks for the tip http://stackoverflow.com/a/1299069
     var input = $('<div>').append( $elem.eq(0).clone() ).html();
+
     var className = '';
 
     if (!!$elem.attr('class')) {
@@ -41,7 +54,7 @@ $.fn.bootstrapFileInput = function() {
 
     // Now we're going to replace that input field with a Bootstrap button.
     // The input will actually still be there, it will just be float above and transparent (done with the CSS).
-    $elem.replaceWith('<a class="file-input-wrapper btn-default btn' + className + '">'+buttonWord+input+'</a>');
+    $elem.replaceWith('<a class="file-input-wrapper btn-default btn' + className + '">'+buttonWord+input+icon+'</a>');
   })
 
   // After we have found all of the file inputs let's apply a listener for tracking the mouse movement.

@@ -28,6 +28,7 @@ switch($action)
 
     default:
         $body .= $Portfolio->defaultView();
+        $msg = $Error->alert();
         break;
 }
 

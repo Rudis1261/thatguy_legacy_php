@@ -1420,8 +1420,8 @@
     # This is a little hack job to make the bootstrap icons prettier
     function icon($icon_type, $white=false, $title="")
     {
-        $add = ($white) ? " glyphicon glyphicon-white" : "";
-        $out = '<i title="' . $title . '" class="glyphicon glyphicon-' . $icon_type.$add. '"></i>';
+        $add = ($white) ? ' style="color: white;" ' : "";
+        $out = '<i title="' . $title . '" class="glyphicon glyphicon-' . $icon_type . '" ' . $add . '></i>';
         return $out;
     }
 

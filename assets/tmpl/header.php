@@ -36,7 +36,8 @@ $menuLoggedin   = array(
 $menuAdmin      = array(
   "users.php"       => "Users" . icon('user'),
   "admin.php"       => "Admin" . icon('asterisk'),
-  "index.php?action=meta&type=portfolio_types" => "Portfolio Types" . icon('camera')
+  "index.php?action=meta&type=portfolio_types"  => "Portfolio Types" . icon('camera'),
+  "index.php?action=meta&type=file_types"       => "File Types" . icon('folder-open')
 );
 
 
@@ -196,7 +197,7 @@ function displayMenu($menuList)
       {
         echo "<div class='row'>
                   <div class='col-sm-6'>
-                  " . $msg . "
+                    " . $msg . "
                   </div>
               </div>";
       }

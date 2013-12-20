@@ -185,16 +185,15 @@
         public function availableWallpapers() // returns an array of possible resolutions
         {
             $sizes = array();
-            $sizes['width'] = array('2560', '1920', '1680', '1600', '1440', '1280', '1024', '800', '480', '360');
-            $sizes['height'] = array('1600', '1200', '1050', '1200', '960', '1024', '768', '600', '360', '480');
+            $sizes['width'] = array('2560', '2560', '1920', '1680', '1600', '1440', '1280', '1024', '800', '480', '360');
+            $sizes['height'] = array('1920','1600', '1200', '1050', '1200', '960', '1024', '768', '600', '360', '480');
             $possible = array();
 
             foreach($sizes['width'] as $key=>$width)
             {
                 $height = $sizes['height'][$key];
 
-                if (($this->width >= $width)
-                && ($this->height >= $height))
+                if (($this->width >= $width) OR ($this->height >= $height))
                 {
                    $possible[] = array('width'=>$width,'height'=>$height);
                 }
@@ -203,15 +202,17 @@
             if (count($possible) > 0)
             {
                 return $possible;
-            } else {
+            }
+
+            else
+            {
                 return false;
             }
         }
 
         public function resizeToResolution($width, $height, $quality=85, $save=false)
         {
-            if (($this->width >= $width)
-            && ($this->height >= $height))
+            if (($this->width >= $width) AND ($this->height >= $height))
             {
                 $resolution_aspect = round($width / $height, 2);
                 $image_aspect = round($this->width / $this->height, 2);
@@ -219,16 +220,18 @@
                 if ($resolution_aspect <= $image_aspect)
                 {
                     $this->scale(null, $height);
-                } else {
+                }
+
+                else
+                {
                     $this->scale($width, null);
                 }
 
                 $this->cropCentered($width, $height);
                 if ($save == false) $this->output('jpg', $quality);
 
-            } else {
-                return false;
             }
+            return false;
         }
 
         // Bluid a collage using the GD function
@@ -247,7 +250,10 @@
             {
                 $vert_parts = 1;
                 $horz_parts = $count;
-            } else {
+            }
+
+            else
+            {
                 for($x = 20; $x >= 2; $x--)
                 {
                     for($y = 20; $y >= $x; $y--)

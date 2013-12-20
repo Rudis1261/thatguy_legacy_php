@@ -70,7 +70,7 @@
 		// Modal
 		var buttons = '<button class="confirm btn btn-primary" type="button" data-dismiss="modal">'
 			+ options.confirmButton + '</button>'
-			+ '<button class="cancel btn" type="button" data-dismiss="modal">'
+			+ '<button class="cancel btn btn-default" type="button" data-dismiss="modal">'
 			+ options.cancelButton + '</button>';
 var modalHTML = '<div class="modal fade">'
 	+ '<div class="modal-dialog">'
