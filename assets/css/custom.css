@@ -31,14 +31,16 @@ body {
 
 
 #wrapper {
-  padding-left: 250px;
+  padding-left: 220px;
   transition: all 0.2s ease 0s;
 }
 
+
+
 #sidebar-wrapper {
-  margin-left: -250px;
-  left: 250px;
-  width: 250px;
+  margin-left: -220px;
+  left: 220px;
+  width: 220px;
   background: #000;
   position: fixed;
   height: 100%;
@@ -54,7 +56,7 @@ body {
 .sidebar-nav {
   position: absolute;
   top: 0;
-  width: 250px;
+  width: 220px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -62,7 +64,7 @@ body {
 }
 
 #sidebar-admin {
-  width: 250px;
+  width: 220px;
   list-style: none;
 }
 
@@ -175,12 +177,12 @@ body {
 
   #wrapper.active {
     position: relative;
-    left: 250px;
+    left: 220px;
   }
 
   #wrapper.active #sidebar-wrapper {
-    left: 250px;
-    width: 250px;
+    left: 220px;
+    width: 220px;
     transition: all 0.4s ease 0s;
   }
 
