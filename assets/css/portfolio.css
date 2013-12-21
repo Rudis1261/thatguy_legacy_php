@@ -1,15 +1,50 @@
+
 .portfolioTiles {
   padding-right: 10px;
-  line-height: 185px;
+  line-height: 190px;
 }
 
 .portfolioTiles > img {
-    width: 250px;
+  width: 240px;
+  border: 1px solid grey;
+}
+
+.publisher {
+  text-align: center;
+  background: #ccc;
+  padding: 10px 15px;
+  margin: 0px -20px;
+  border-top: 1px solid grey;
+  border-bottom: 1px solid grey;
+}
+
+
+.actions {
+  z-index: 100;
+  margin-left: -80px;
+  width: 80px;
+  height: 68px;
+  margin-top: -68px;
+}
+
+
+.modal-footer {
+  line-height: 20px;
 }
 
 
 @media (min-width: 768px) and (max-width: 979px) {
 
+    .publisher {
+      padding: 5px 20px;
+      margin: 0px -20px;
+    }
+
+    .actions {
+      height: 55px;
+      margin-top: -55px;
+    }
+
     .portfolioTiles {
       padding-right: 5px;
       line-height: 140px;
@@ -21,14 +56,26 @@
 }
 
 
+
 @media (max-width: 767px) {
 
-    .portfolioTiles {
-      padding-right: 5px;
-      line-height: 140px;
-    }
 
-    .portfolioTiles > img {
-        width: 200px;
-    }
+  .actions {
+    height: 35px;
+    margin-top: -35px;
+  }
+
+  .publisher {
+    padding: 5px 15px;
+    margin: 0px -20px;
+  }
+
+  .portfolioTiles {
+    padding-right: 5px;
+    line-height: 100px;
+  }
+
+  .portfolioTiles > img {
+      width: 140px;
+  }
 }

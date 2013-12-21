@@ -109,7 +109,10 @@
         public function publisher()
         {
             # Start the output
-            $out = "";
+            $out = "<h2>Publisher " . icon('camera') . " <small>Review, name and publish</small></h2>";
+
+            # Let's make it stand out a bit
+            $out .= "<div class='publisher'>";
 
             # Ensure that there are unpublished images to work with
             if (!empty($this->unpublished))
@@ -119,12 +122,56 @@
                 # loop through them
                 foreach($this->unpublished as $image)
                 {
+                    $types = "";
+                    foreach((array)$this->types as $type)
+                    {
+                        $types .= '<div class="checkbox" style="line-height: 18px;">
+                                        <label>
+                                            <input name="types[]" type="checkbox"> ' . $type . '
+                                        </label>
+                                    </div>';
+                    }
+                    $modal = '<div class="modal fade" id="' . $image['id'] . '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">' .icon("remove", true) . '</button>
+                                            <h4 class="modal-title" id="myModalLabel">What\'s this image all about?</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img class="pull-left img-thumbnail" src="' . $this->pathThumb . $image['image'] . '" alt=""/>
+                                            <form role="form" class="pull-right">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" name="name" placeholder="Image Name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <textarea class="form-control" name="desc" placeholder="Image Description"></textarea>
+                                                </div>
+                                                ' . $types . '
+                                            </form>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default">' . icon("hdd") . '</button>
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">' . icon("remove", true) . '</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>';
+
                     $out .= '<span class="portfolioTiles">
                                 <img class="img-thumbnail" src="' . $this->pathThumb . $image['image'] . '" alt=""/>
+                                <div class="btn-group actions">
+                                    <a class="btn btn-sm btn-default" target="_BLANK" href="' . $this->pathLarge . $image['image'] . '">' . icon('fullscreen') . '</a>
+                                    <a class="btn btn-sm btn-danger" href="#"  data-toggle="modal" data-target="#' . $image['id'] . '">' . icon('pencil') . '</a>
+                                </div>
+                                ' . $modal . '
                             </span>';
                     $counter += 1;
                 }
             }
+
+            $out .= "</div>";
             return $out;
         }
 
