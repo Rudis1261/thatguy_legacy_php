@@ -25,7 +25,7 @@ if ( ($Auth->loggedIn()) && $Auth->isAdmin() )
 							<b>Hey Admin, here's the SQL queries run.</b>
 						</p>
 						<p>
-							<textarea class='input input-default input-sm col-lg-12' rows='10'>";
+							<textarea class='form-control col-lg-12' rows='10'>";
 								foreach($db->queries as $sql)
 								{
 									$additionalContent .= $sql . "\n";

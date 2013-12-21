@@ -20,6 +20,7 @@ $(document).ready(function() {
         $("#menu-toggle").children('i').toggleClass("glyphicon-remove");
     });
 
+
     // Unhide some things when their content changes
     /* Settings.php */
     $('input[name="user-email"]').focus(function(event){

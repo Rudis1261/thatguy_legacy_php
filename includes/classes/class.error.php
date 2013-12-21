@@ -9,9 +9,9 @@
 
         public function __construct($style = "border:1px solid red;")
         {
-            if(empty($_SESSION['error']))
+            if (!isset($_SESSION['error']))
             {
-                $_SESSION['error']=array();
+                $_SESSION['error'] = array();
             }
             $this->style = $style;
         }

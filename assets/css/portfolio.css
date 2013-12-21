@@ -4,7 +4,11 @@
   line-height: 190px;
 }
 
-.portfolioTiles > img {
+.portfolioTiles p {
+  line-height: 18px;
+}
+
+.portfolioTiles > a > img {
   width: 240px;
   border: 1px solid grey;
 }
@@ -18,12 +22,12 @@
   border-bottom: 1px solid grey;
 }
 
-
 .actions {
   z-index: 100;
-  margin-left: -80px;
-  width: 80px;
+  margin-left: -235px;
+  width: 235px;
   height: 68px;
+  text-align: right;
   margin-top: -68px;
 }
 
@@ -41,6 +45,8 @@
     }
 
     .actions {
+      width: 195px;
+      margin-left: -195px;
       height: 55px;
       margin-top: -55px;
     }
@@ -50,7 +56,7 @@
       line-height: 140px;
     }
 
-    .portfolioTiles > img {
+    .portfolioTiles > a > img {
         width: 200px;
     }
 }
@@ -61,6 +67,8 @@
 
 
   .actions {
+    width: 135px;
+    margin-left: -135px;
     height: 35px;
     margin-top: -35px;
   }
@@ -75,7 +83,7 @@
     line-height: 100px;
   }
 
-  .portfolioTiles > img {
+  .portfolioTiles > a > img {
       width: 140px;
   }
 }

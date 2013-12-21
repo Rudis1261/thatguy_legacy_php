@@ -1,4 +1,5 @@
 <?php
+
 //Bootstrap SPF
 require 'includes/master.inc.php';
 
@@ -28,20 +29,49 @@ $body           = "";
 # Switch through the various actions available
 switch($action)
 {
+
+    # Save info
     case "write":
         break;
 
+
+    # Cleanup cron, to remove unpublished and stale images
     case "clean":
         $Portfolio->clean();
         exit();
         break;
 
+
+    # Dropping images like they are hot
+    case "drop":
+
+        # Attempt to remove the image
+        $drop = $Portfolio->drop($id);
+
+        # Success
+        if ($drop == true)
+        {
+            $Error->add("info", "Successfully deleted!");
+        }
+
+        # Denied
+        elseif ($drop === "denied")
+        {
+            $Error->add("error", "Access denied!");
+        }
+
+        # Redirect my good sir
+        redirect($Portfolio->script);
+        break;
+
+
+    # Display the default
     default:
         $body .= $Portfolio->defaultView();
-        $msg = $Error->alert();
         break;
 }
 
+if ((isset($_SESSION['error'])) AND (count($_SESSION['error']) > 0)) $msg = $Error->alert();
 Template::setBaseDir('./assets/tmpl');
 $html = Template::loadTemplate('layout', array(
 	'header'=>Template::loadTemplate('header', array("CSS"=>$CSS->output(), 'title'=>$title,'user'=>$user,'admin'=>$isadmin,'msg'=>$msg, 'selected'=>'portfolio', 'fb'=>$fb, 'Auth'=>$Auth)),

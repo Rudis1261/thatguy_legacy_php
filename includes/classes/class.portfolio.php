@@ -4,22 +4,30 @@
     # Purpose: The purpose of this class is to maintain my portfolio with a single page
     class Portfolio extends DBObject
     {
-        # We need some variables to make this work
+        # Internal Objects
         private $db;
         private $Auth;
         private $Error;
 
+        # On construct variables
         public $types;
         public $file_types;
         public $images;
         public $unpublished;
         public $imgErrors;
 
+        # Runtime variables
         public $script      = "portfolio.php";
         public $path        = "uploads/";
         public $pathThumb   = "uploads/thumb/";
         public $pathMedium  = "uploads/medium/";
         public $pathLarge   = "uploads/large/";
+
+        public $sizes       = array(
+            "pathLarge"     => array("w"=>2560, "h"=>1920, "q"=>85),
+            "pathMedium"    => array("w"=>960, "h"=>600, "q"=>85),
+            "pathThumb"     => array("w"=>250, "h"=>160, "q"=>90)
+        );
 
 
         # We will be creating another instance of the portfolio class and construct it
@@ -46,6 +54,7 @@
             # Hook into the Error system
             $this->Error        = Error::getError();
 
+            # Uploading stuff you can expect these errors
             $this->imgErrors    = array(
                 0=>"There is no error, the file uploaded with success",
                 1=>"The uploaded file exceeds the upload_max_filesize directive in php.ini. " . ini_get('upload_max_filesize'),
@@ -56,7 +65,7 @@
             );
 
             # Select the images from the db
-            $this->db->query("SELECT `" . implode("`, `", $columns) . "` FROM portfolio");
+            $this->db->query("SELECT `" . implode("`, `", $columns) . "` FROM portfolio ORDER by id DESC");
 
             # Get the results
             $results = $this->db->getRows();
@@ -105,6 +114,46 @@
         }
 
 
+        # Trash a particular image
+        public function drop($id)
+        {
+            # Only admins please
+            if ($this->Auth->isAdmin() == false)
+            {
+                return "denied";
+            }
+
+            $image = false;
+
+            # Check for the image in the images
+            if (isset($this->images[$id]))
+            {
+                $image = $this->images[$id];
+            }
+
+            # It might also be an unpublished image
+            elseif (isset($this->unpublished[$id]))
+            {
+                $image = $this->unpublished[$id];
+            }
+
+            # Ok so we actually have an image to work with. Cool
+            if ($image !== false)
+            {
+                # Unlink the images
+                if (file_exists($this->pathThumb . $image['image']))    unlink($this->pathThumb . $image['image']);
+                if (file_exists($this->pathMedium . $image['image']))   unlink($this->pathMedium . $image['image']);
+                if (file_exists($this->pathLarge . $image['image']))    unlink($this->pathLarge . $image['image']);
+
+                # And drop it from the DB and return the result
+                return $this->db->query("DELETE FROM portfolio WHERE id=" . $image['id']);
+            }
+
+            # Default to false
+            return false;
+        }
+
+
         # The publisher is the page which will be used to complete the image details
         public function publisher()
         {
@@ -117,35 +166,70 @@
             # Ensure that there are unpublished images to work with
             if (!empty($this->unpublished))
             {
-                $counter    = 0;
-
                 # loop through them
                 foreach($this->unpublished as $image)
                 {
-                    $types = "";
+                    $types  = "";
+                    $c      = 3;
+
+                    # Loop through the types
                     foreach((array)$this->types as $type)
                     {
-                        $types .= '<div class="checkbox" style="line-height: 18px;">
+                        # And add the checkboxes for the details
+                        $types .= '<div class="checkbox" tabindex="' . $c . '" align="left" style="line-height: 18px;">
                                         <label>
                                             <input name="types[]" type="checkbox"> ' . $type . '
                                         </label>
                                     </div>';
+
+                        $c++;
                     }
+
+                    $cameraInfo = "";
+
+                    # Let's see if and camera info was picked up and booked in?
+                    if ((!empty($image['make'])) AND (!empty($image['model'])))
+                    {
+                        # We have info, let's add it
+                        $cameraInfo .= "<div align='left'>";
+
+                        # Which fields are we getting the data from?
+                        $fields = array("make", "model", "iso", "aperture", "exposure");
+
+                        # Let's get the data
+                        foreach($fields as $field)
+                        {
+                            # Let's only add the data which is populated
+                            if (!empty($image[$field]))
+                            {
+                                $cameraInfo .= "<p><strong><span class='col-sm-5'>" . ucfirst($field) . "</span></strong> " . $image[$field] . "</p>";
+                            }
+                        }
+
+                        # Close the camera info off
+                        $cameraInfo .= "</div>";
+                    }
+
+                    # Modal time :-D
                     $modal = '<div class="modal fade" id="' . $image['id'] . '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">' .icon("remove", true) . '</button>
+                                            <button type="button" class="close" tabindex="-1" data-dismiss="modal" aria-hidden="true">' .icon("remove", true) . '</button>
                                             <h4 class="modal-title" id="myModalLabel">What\'s this image all about?</h4>
                                         </div>
                                         <div class="modal-body">
-                                            <img class="pull-left img-thumbnail" src="' . $this->pathThumb . $image['image'] . '" alt=""/>
+                                            <div class="pull-left">
+                                                <img class="img-thumbnail" tabindex="-1" src="' . $this->pathThumb . $image['image'] . '" alt="' . $image['name'] . '"/>
+                                                <br />
+                                                ' . $cameraInfo . '
+                                            </div>
                                             <form role="form" class="pull-right">
                                                 <div class="form-group">
-                                                    <input type="text" class="form-control" name="name" placeholder="Image Name">
+                                                    <input type="text" class="form-control" tabindex="1" name="name" placeholder="Image Name">
                                                 </div>
                                                 <div class="form-group">
-                                                    <textarea class="form-control" name="desc" placeholder="Image Description"></textarea>
+                                                    <textarea class="form-control" name="desc" tabindex="2" placeholder="Image Description"></textarea>
                                                 </div>
                                                 ' . $types . '
                                             </form>
@@ -159,15 +243,22 @@
                                 </div>
                             </div>';
 
+                    # I would like to see if the image has camera information. Let's add a button to display it
+                    $addCamera = ((!empty($image['make'])) AND (!empty($image['model']))) ? btn(icon('camera'), 'primary btn-sm disabled', "Has camera info") : "";
+
+                    # Add the tile
                     $out .= '<span class="portfolioTiles">
-                                <img class="img-thumbnail" src="' . $this->pathThumb . $image['image'] . '" alt=""/>
-                                <div class="btn-group actions">
+                                <a style="text-decoration: none;" href="#"  data-toggle="modal" data-target="#' . $image['id'] . '">
+                                    <img class="img-thumbnail" src="' . $this->pathThumb . $image['image'] . '" alt=""/>
+                                </a>
+                                <div class="btn-group actions" align="right">
                                     <a class="btn btn-sm btn-default" target="_BLANK" href="' . $this->pathLarge . $image['image'] . '">' . icon('fullscreen') . '</a>
-                                    <a class="btn btn-sm btn-danger" href="#"  data-toggle="modal" data-target="#' . $image['id'] . '">' . icon('pencil') . '</a>
+                                    <a class="btn btn-sm btn-success" href="#"  data-toggle="modal" data-target="#' . $image['id'] . '">' . icon('pencil') . '</a>
+                                    <a class="btn btn-sm btn-danger" href="?action=drop&id=' . $image['id'] . '">' . icon('trash') . '</a>
+                                    ' . $addCamera . '
                                 </div>
                                 ' . $modal . '
                             </span>';
-                    $counter += 1;
                 }
             }
 
@@ -253,15 +344,8 @@
                     # Move the image and create the different sizes
                     move_uploaded_file($imgTmpName, $this->path . $imgNewName) or die ("Could not move image " . $imgNewName . " to " . $this->path);
 
-                    # What size options do we have?
-                    $sizes  = array(
-                        "pathLarge"     => array("w"=>2560, "h"=>1920, "q"=>85),
-                        "pathMedium"    => array("w"=>960, "h"=>600, "q"=>85),
-                        "pathThumb"     => array("w"=>250, "h"=>160, "q"=>90)
-                    );
-
                     # Loop through the sizes
-                    foreach($sizes as $type=>$dimension)
+                    foreach($this->sizes as $type=>$dimension)
                     {
                         # Load the image into GD and resize it to the 3 sizes
                         $GD = new GD($this->path . $imgNewName);
@@ -310,6 +394,13 @@
                         # Add the individual ones
                         $this->Error->add("error", $error);
                     }
+                }
+
+                # No errors, redirect
+                else
+                {
+                    $this->Error->add("info", "Successfull upload!");
+                    redirect($this->script);
                 }
             }
 
@@ -361,7 +452,7 @@
                     // Aperture
                     if (@array_key_exists('ApertureFNumber', $exif_ifd0['COMPUTED']))
                     {
-                        $return['aperture'] = $exif_ifd0['COMPUTED']['ApertureFNumber'];
+                        $return['aperture'] = str_replace("f/", "", $exif_ifd0['COMPUTED']['ApertureFNumber']);
                     }
 
                     // ISO
