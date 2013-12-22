@@ -1,7 +1,7 @@
 
 .portfolioTiles {
   padding-right: 10px;
-  line-height: 190px;
+  line-height: 175px;
 }
 
 .portfolioTiles p {
@@ -12,6 +12,7 @@
   width: 240px;
   border: 1px solid grey;
 }
+
 
 .publisher {
   text-align: center;
@@ -39,6 +40,7 @@
 
 @media (min-width: 768px) and (max-width: 979px) {
 
+
     .publisher {
       padding: 5px 20px;
       margin: 0px -20px;
@@ -53,18 +55,18 @@
 
     .portfolioTiles {
       padding-right: 5px;
-      line-height: 140px;
+      line-height: 145px;
     }
 
     .portfolioTiles > a > img {
         width: 200px;
     }
+
 }
 
 
 
 @media (max-width: 767px) {
-
 
   .actions {
     width: 135px;
@@ -80,7 +82,7 @@
 
   .portfolioTiles {
     padding-right: 5px;
-    line-height: 100px;
+    line-height: 105px;
   }
 
   .portfolioTiles > a > img {

@@ -32,6 +32,8 @@ switch($action)
 
     # Save info
     case "write":
+        $Portfolio->upsert($id);
+        exit();
         break;
 
 

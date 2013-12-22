@@ -12,6 +12,7 @@ function wrapText(elementID, openTag, closeTag) {
 
 $(document).ready(function() {
 
+
     $("#menu-toggle").click(function(e) {
         e.preventDefault();
         $("#wrapper").toggleClass("active");
@@ -20,6 +21,14 @@ $(document).ready(function() {
         $("#menu-toggle").children('i').toggleClass("glyphicon-remove");
     });
 
+
+    $(".updateImage").click(function(e) {
+        var getId = $(this).attr("data-id");
+        form = $("form[name='myForm" + getId + "']").serialize();
+        $.post( "portfolio.php", form, function( data ) {
+            console.log(data);
+        });
+    });
 
     // Unhide some things when their content changes
     /* Settings.php */

@@ -6,7 +6,7 @@
         public $idColumnName;
         public $columns;
         protected $className;
-	protected static $autoColumns;
+        protected static $autoColumns;
 
         protected function __construct($table_name, $columns_or_id = null, $id = null)
         {
@@ -29,7 +29,7 @@
 			{
 				if(!isset(self::$autoColumns))
 					self::$autoColumns = array();
-				
+
 				if(!isset(self::$autoColumns[$this->className]))
 				{
 					self::$autoColumns[$this->className] = array();
@@ -137,13 +137,13 @@
                     $data[$k] = $db->quote($v);
 
             $columns = '`' . implode('`, `', array_keys($data)) . '`';
-            $values = implode(',', $data);  
+            $values = implode(',', $data);
 
             $db->query("$cmd `{$this->tableName}` ($columns) VALUES ($values)");
             $this->id = $db->insertId();
             return $this->id;
         }
-	
+
 
         public function replace()
         {

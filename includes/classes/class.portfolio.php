@@ -34,7 +34,21 @@
         public function __construct($id = null)
         {
             # Construct the parent
-            $columns = array("id", "type", "image", "name", "desc", "iso", "aperture", "exposure", "make", "model", "published", "timestamp");
+            $columns = array(
+                'id',
+                'type',
+                'image',
+                'name',
+                'desc',
+                'iso',
+                'aperture',
+                'exposure',
+                'make',
+                'model',
+                'published',
+                'timestamp'
+            );
+
             parent::__construct('portfolio', $columns, $id);
 
             # Hook into the meta and get the types
@@ -178,7 +192,7 @@
                         # And add the checkboxes for the details
                         $types .= '<div class="checkbox" tabindex="' . $c . '" align="left" style="line-height: 18px;">
                                         <label>
-                                            <input name="types[]" type="checkbox"> ' . $type . '
+                                            <input value="' . $type . '" name="type[]" type="checkbox"> ' . $type . '
                                         </label>
                                     </div>';
 
@@ -224,19 +238,24 @@
                                                 <br />
                                                 ' . $cameraInfo . '
                                             </div>
-                                            <form role="form" class="pull-right">
+                                            <form role="form" class="pull-right form-vertical" name="myForm' . $image['id'] . '">
+                                                <input type="hidden" name="id" value="' . $image['id'] . '" />
+                                                <input type="hidden" name="action" value="write" />
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" tabindex="1" name="name" placeholder="Image Name">
                                                 </div>
                                                 <div class="form-group">
                                                     <textarea class="form-control" name="desc" tabindex="2" placeholder="Image Description"></textarea>
                                                 </div>
+                                                <div class="form-group">
+                                                    ' . bool_select($image['published'], "published") . '
+                                                </div>
                                                 ' . $types . '
                                             </form>
                                             <div class="clearfix"></div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default">' . icon("hdd") . '</button>
+                                            <button type="button" data-id="' . $image['id'] . '" class="btn btn-default updateImage">' . icon("hdd") . '</button>
                                             <button type="button" class="btn btn-danger" data-dismiss="modal">' . icon("remove", true) . '</button>
                                         </div>
                                     </div>
@@ -535,6 +554,8 @@
             # Create an instance of the portfolio
             $p              = new Portfolio($id);
 
+            //print_r($id);
+
             # Update the details
             $p->type        = (isset($info['type'])) ? json_encode($info['type']) : "";
             $p->image       = $info['image'];
@@ -565,6 +586,52 @@
             {
                 return $p->id;
             }
+            return false;
+        }
+
+        public function upsert($id)
+        {
+            $image = false;
+
+            # Attempt to find the image's information
+            if (isset($this->images[$id]))
+            {
+                $image = $this->images[$id];
+            }
+
+            # Was it published yet?
+            elseif (isset($this->unpublished[$id]))
+            {
+                $image = $this->unpublished[$id];
+            }
+
+            # We found the image, let's override the data
+            if ($image !== false)
+            {
+                # Loop through the form data and get the key value pairs
+                foreach($_REQUEST as $key=>$req)
+                {
+                    # Check if it's part of the data set?
+                    if (isset($image[$key]))
+                    {
+                        # Override the image's information
+                        $image[$key] = $req;
+                    }
+                }
+
+                # Write the image's new data to DB
+                $write = $this->write($image);
+
+                # Check whether the write was a success
+                if ($write !== false)
+                {
+                    echo "success";
+                    return true;
+                }
+            }
+
+            # Default to failed state
+            echo "failure";
             return false;
         }
     }
