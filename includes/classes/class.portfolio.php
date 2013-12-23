@@ -24,7 +24,7 @@
         public $pathLarge   = "uploads/large/";
 
         public $sizes       = array(
-            "pathLarge"     => array("w"=>2560, "h"=>1920, "q"=>85),
+            "pathLarge"     => array("w"=>2560, "h"=>1600, "q"=>85),
             "pathMedium"    => array("w"=>960, "h"=>600, "q"=>85),
             "pathThumb"     => array("w"=>250, "h"=>160, "q"=>90)
         );
@@ -49,7 +49,7 @@
                 'timestamp'
             );
 
-            parent::__construct('portfolio', $columns, $id);
+            parent::__construct('portfolio', /*$columns,*/ $id);
 
             # Hook into the meta and get the types
             $meta               = new Meta("portfolio_types");
@@ -189,10 +189,20 @@
                     # Loop through the types
                     foreach((array)$this->types as $type)
                     {
+                        # Attempt to get the types from the database
+                        $getTypes   = json_decode($image['type'], true);
+                        $active     = "";
+
+                        # Ensure that there was something from the db and also ensure that the type is present
+                        if (($getTypes !== false) AND (is_array($getTypes)) AND (in_array($type, $getTypes)))
+                        {
+                            $active = " checked ";
+                        }
+
                         # And add the checkboxes for the details
                         $types .= '<div class="checkbox" tabindex="' . $c . '" align="left" style="line-height: 18px;">
                                         <label>
-                                            <input value="' . $type . '" name="type[]" type="checkbox"> ' . $type . '
+                                            <input ' . $active . ' value="' . $type . '" name="type[]" type="checkbox"> ' . $type . '
                                         </label>
                                     </div>';
 
@@ -225,33 +235,36 @@
                     }
 
                     # Modal time :-D
-                    $modal = '<div class="modal fade" id="' . $image['id'] . '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    $modal = '<div class="modal fade" id="modal' . $image['id'] . '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" tabindex="-1" data-dismiss="modal" aria-hidden="true">' .icon("remove", true) . '</button>
+                                            <button type="button" class="close" tabindex="-1" data-dismiss="modal" aria-hidden="true">' .icon("remove-sign", true) . '</button>
                                             <h4 class="modal-title" id="myModalLabel">What\'s this image all about?</h4>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="pull-left">
+                                            <div class="pull-left col-sm-6" align="center">
                                                 <img class="img-thumbnail" tabindex="-1" src="' . $this->pathThumb . $image['image'] . '" alt="' . $image['name'] . '"/>
                                                 <br />
-                                                ' . $cameraInfo . '
+                                                <div class="clearfix"></div>
+                                                <p>' . $cameraInfo . '</p>
                                             </div>
-                                            <form role="form" class="pull-right form-vertical" name="myForm' . $image['id'] . '">
-                                                <input type="hidden" name="id" value="' . $image['id'] . '" />
-                                                <input type="hidden" name="action" value="write" />
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" tabindex="1" name="name" placeholder="Image Name">
-                                                </div>
-                                                <div class="form-group">
-                                                    <textarea class="form-control" name="desc" tabindex="2" placeholder="Image Description"></textarea>
-                                                </div>
-                                                <div class="form-group">
-                                                    ' . bool_select($image['published'], "published") . '
-                                                </div>
-                                                ' . $types . '
-                                            </form>
+                                            <div class="pull-left col-sm-6" align="center">
+                                                <form role="form" class="form-vertical" name="myForm' . $image['id'] . '">
+                                                    <input type="hidden" name="id" value="' . $image['id'] . '" />
+                                                    <input type="hidden" name="action" value="write" />
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" value="' . $image['name'] . '" tabindex="1" name="name" placeholder="Image Name">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <textarea class="form-control" name="desc" tabindex="2" rows="4" placeholder="Image Description">' . $image['desc'] . '</textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        ' . bool_select($image['published'], "published") . '
+                                                    </div>
+                                                    ' . $types . '
+                                                </form>
+                                            </div>
                                             <div class="clearfix"></div>
                                         </div>
                                         <div class="modal-footer">
@@ -266,13 +279,13 @@
                     $addCamera = ((!empty($image['make'])) AND (!empty($image['model']))) ? btn(icon('camera'), 'primary btn-sm disabled', "Has camera info") : "";
 
                     # Add the tile
-                    $out .= '<span class="portfolioTiles">
-                                <a style="text-decoration: none;" href="#"  data-toggle="modal" data-target="#' . $image['id'] . '">
-                                    <img class="img-thumbnail" src="' . $this->pathThumb . $image['image'] . '" alt=""/>
+                    $out .= '<span class="portfolioTiles" data-id="' . $image['id'] . '">
+                                <a style="text-decoration: none;" href="#"  data-toggle="modal" data-target="#modal' . $image['id'] . '">
+                                    <img class="img-thumbnail" data-id="' . $image['id'] . '" src="' . $this->pathThumb . $image['image'] . '" alt=""/>
                                 </a>
                                 <div class="btn-group actions" align="right">
                                     <a class="btn btn-sm btn-default" target="_BLANK" href="' . $this->pathLarge . $image['image'] . '">' . icon('fullscreen') . '</a>
-                                    <a class="btn btn-sm btn-success" href="#"  data-toggle="modal" data-target="#' . $image['id'] . '">' . icon('pencil') . '</a>
+                                    <a class="btn btn-sm btn-success" href="#"  data-toggle="modal" data-target="#modal' . $image['id'] . '">' . icon('pencil') . '</a>
                                     <a class="btn btn-sm btn-danger" href="?action=drop&id=' . $image['id'] . '">' . icon('trash') . '</a>
                                     ' . $addCamera . '
                                 </div>
@@ -293,7 +306,7 @@
             $out = '<form role="form" method="post" enctype="multipart/form-data">
                       <div class="form-group">
                         <div class="input-group">
-                            <button type="submit" class="btn btn-default addOn">Upload ' . icon("cloud") . '</button>
+                            <button type="submit" class="btn btn-default addOn">Upload ' . icon("upload") . '</button>
                             <input type="file" icon="picture" title="Select images" name="upload[]" class="btn-success" multiple>
                         </div>
                       </div>
@@ -335,7 +348,7 @@
 
                     # We have files to let's attempt to get the extension
                     $imgDetails = pathinfo($imgName);
-                    $extension  = $imgDetails["extension"];
+                    $extension  = strtolower($imgDetails["extension"]);
 
                     # Incorrect mime type, skip iteration
                     if ($mime !== "image")
@@ -554,7 +567,11 @@
             # Create an instance of the portfolio
             $p              = new Portfolio($id);
 
-            //print_r($id);
+            # Let's set the id
+            if (isset($info['id']))
+            {
+               $p->id       = $info['id'];
+            }
 
             # Update the details
             $p->type        = (isset($info['type'])) ? json_encode($info['type']) : "";

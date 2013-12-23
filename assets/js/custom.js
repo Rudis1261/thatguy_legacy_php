@@ -26,7 +26,16 @@ $(document).ready(function() {
         var getId = $(this).attr("data-id");
         form = $("form[name='myForm" + getId + "']").serialize();
         $.post( "portfolio.php", form, function( data ) {
+
             console.log(data);
+
+            // On a success, remove the modal, and color the tile
+            if (data == "success")
+            {
+                $(".modal").modal("hide");
+                //$("span.portfolioTiles[data-id='" + getId + "']").hide();
+                $("img.img-thumbnail[data-id='" + getId + "']").css({'border' : '1px solid #1b3c55', 'background' : '#d7e0e8'}).fadeTo("fast" , 0.9);
+            }
         });
     });
 
