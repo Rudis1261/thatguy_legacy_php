@@ -7,10 +7,12 @@ require 'includes/master.inc.php';
 require 'includes/user.inc.php';
 
 # Export the JS
+$JS->add('lightbox-2.6.min.js');
 $JS->output('portfolio.js');
 $JS->export();
 
 # And the CSS
+$CSS->add("lightbox.css");
 $CSS->add('portfolio.css');
 $CSS->output('portfolio.css');
 $CSS->export();

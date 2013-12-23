@@ -15,6 +15,7 @@
         public $images;
         public $unpublished;
         public $imgErrors;
+        public $page;
 
         # Runtime variables
         public $script      = "portfolio.php";
@@ -103,6 +104,8 @@
                     }
                 }
             }
+
+            $this->page = (isset($_REQUEST['page'])) ? $_REQUEST['page'] : 1;
         }
 
 
@@ -122,6 +125,12 @@
             if (!empty($this->unpublished))
             {
                 $out .= $this->publisher();
+            }
+
+            # Ensure that we have images to display
+            if ((!empty($this->images)) AND (!empty($this->types)))
+            {
+                $out .= $this->showcase();
             }
 
             return $out;
@@ -165,6 +174,123 @@
 
             # Default to false
             return false;
+        }
+
+
+        # This function will be used to showcase the images
+        public function showcase()
+        {
+            $images     = array();
+            $out        = "<div class='btn-group'>";
+            $type       = (isset($_REQUEST['type'])) ? $_REQUEST['type'] : false;
+
+            # Loop through the types and create the button group
+            foreach($this->types as $t)
+            {
+                $found = false;
+                foreach($this->images as $i)
+                {
+                    if (strstr($i['type'], $t))
+                    {
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if ($found !== false)
+                {
+                    $active = (($type !== false) AND ($type== $t)) ? " active " : "";
+                    $out .= '<a class="btn btn-default' . $active . '" href="?type=' . $t . '">' . $t . '</a>';
+                }
+            }
+
+            $out .= "</div>";
+
+            # No type defined, consider all the images
+            if ($type == false)
+            {
+                $images = $this->images;
+            }
+
+            # Cool we are looking at a specific set of images
+            else
+            {
+                # Loop through the images
+                foreach($this->images as $i=>$image)
+                {
+                    # Match out the types
+                    if (strstr($image['type'], $type))
+                    {
+                        $images[] = $image;
+                    }
+                }
+            }
+
+            $out .= $this->pager($images);
+            $out .= "<div class='publisher'>";
+
+            # Chunk the array, get the index we want
+            $chunks = array_chunk($images, 15);
+
+            # Ensure it exists
+            if (!empty($chunks[($this->page - 1)]))
+            {
+                $group = ($type !== false) ? $type : "all";
+
+                # Loop through the chunk
+                foreach($chunks[($this->page - 1)] as $image)
+                {
+                    $out .= '<a style="text-decoration: none;" href="' . $this->pathLarge . $image['image'] . '" data-lightbox="' . $group . '" title="' . $image['name'] . " - " . $image['desc'] . '">
+                                <img class="collage" data-id="' . $image['id'] . '" src="' . $this->pathThumb . $image['image'] . '" alt="' . $image['name'] . '"/>
+                            </a>';
+                }
+                $out .= "<div class='clearfix'></div>";
+            }
+
+            $out .= "</div>";
+            $out .= $this->pager($images);
+            return $out;
+        }
+
+
+        # I would like a generic pager, thank you
+        public function pager($inputArray, $searchAppend="", $perPage=15, $padding=3)
+        {
+            $itemCount  = count($inputArray);
+            $numPages   = ceil($itemCount / $perPage);
+
+            # Start building the pager
+            $paging = '<div class="row">
+                        <ul class="pagination">'. nl();
+
+            # Loop through the number of pages
+            for($i=1; $i<=$numPages; $i++)
+            {
+                $min = $this->page - $padding;
+                $max = $this->page + $padding;
+
+                if ($i == 1)
+                {
+                    $paging .= '<li><a href="?page=' . $i . $searchAppend .'">&laquo;</a></li>'. nl();
+                }
+
+                if ($i == $this->page)
+                {
+                    $paging .= '<li class="active"><a href="#">' . $i . '</a></li>'. nl();
+                }
+
+                elseif (($i >= $max) xor ($i > $min))
+                {
+                    $paging .= '<li><a href="?page=' . $i . $searchAppend . '">' . $i . '</a></li>'. nl();
+                }
+
+                if ($i == $numPages)
+                {
+                    $paging .= '<li><a href="?page=' . $numPages . $searchAppend . '">&raquo;</a></li>'. nl();
+                }
+            }
+            $paging .='</ul></div>'. nl();
+            return $paging;
         }
 
 
@@ -294,7 +420,7 @@
                 }
             }
 
-            $out .= "</div>";
+            $out .= "</div><br />";
             return $out;
         }
 
