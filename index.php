@@ -34,6 +34,7 @@ switch($action)
         break;
 
     default:
+        redirect("blog.php");
         break;
 }
 
