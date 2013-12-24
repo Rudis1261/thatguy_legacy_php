@@ -251,13 +251,172 @@
                 # Loop through the chunk
                 foreach($chunks[($this->page - 1)] as $image)
                 {
+                    $types  = "";
+                    $c      = 3;
+
+                    # Loop through the types
+                    foreach((array)$this->types as $type)
+                    {
+                        # Attempt to get the types from the database
+                        $getTypes   = json_decode($image['type'], true);
+                        $active     = "";
+
+                        # Ensure that there was something from the db and also ensure that the type is present
+                        if (($getTypes !== false) AND (is_array($getTypes)) AND (in_array($type, $getTypes)))
+                        {
+                            $active = " checked ";
+                        }
+
+                        # And add the checkboxes for the details
+                        $types .= '<div class="checkbox" tabindex="' . $c . '" align="left" style="line-height: 18px;">
+                                        <label>
+                                            <input ' . $active . ' value="' . $type . '" name="type[]" type="checkbox"> ' . $type . '
+                                        </label>
+                                    </div>';
+
+                        $c++;
+                    }
+
+                    $cameraInfo = "";
+
+                    # Let's see if and camera info was picked up and booked in?
+                    if ((!empty($image['make'])) AND (!empty($image['model'])))
+                    {
+                        # We have info, let's add it
+                        $cameraInfo .= "<div align='left'>";
+
+                        # Which fields are we getting the data from?
+                        $fields = array("make", "model", "iso", "aperture", "exposure");
+
+                        # Let's get the data
+                        foreach($fields as $field)
+                        {
+                            # Let's only add the data which is populated
+                            if (!empty($image[$field]))
+                            {
+                                $cameraInfo .= "<p><strong><span class='col-sm-5'>" . ucfirst($field) . "</span></strong> " . $this->exposure($image[$field]) . "</p>";
+                            }
+                        }
+
+                        # Close the camera info off
+                        $cameraInfo .= "</div>";
+                    }
+
+                    # Modal time :-D
+                    $modal = '<div class="modal fade" id="modal' . $image['id'] . '" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" tabindex="-1" data-dismiss="modal" aria-hidden="true">' .icon("remove-sign", true) . '</button>
+                                            <h4 class="modal-title" id="myModalLabel">What\'s this image all about?</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="pull-left col-sm-6" align="center">
+                                                <img class="img-thumbnail" tabindex="-1" src="' . $this->pathThumb . $image['image'] . '" alt="' . $image['name'] . '"/>
+                                                <br />
+                                                <div class="clearfix"></div>
+                                                <p>' . $cameraInfo . '</p>
+                                            </div>
+                                            <div class="pull-left col-sm-6" align="center">
+                                                <form role="form" class="form-vertical" name="myForm' . $image['id'] . '">
+                                                    <input type="hidden" name="id" value="' . $image['id'] . '" />
+                                                    <input type="hidden" name="action" value="write" />
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" value="' . $image['name'] . '" tabindex="1" name="name" placeholder="Image Name">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <textarea class="form-control" name="desc" tabindex="2" rows="4" placeholder="Image Description">' . $image['desc'] . '</textarea>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        ' . bool_select($image['published'], "published") . '
+                                                    </div>
+                                                    ' . $types . '
+                                                </form>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" data-id="' . $image['id'] . '" class="btn btn-default updateImage">' . icon("hdd") . '</button>
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">' . icon("remove", true) . '</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>';
+
+                    $addCamera = '';
+
+                    # Add the camera information, should it be available
+                    if ((!empty($image['make'])) AND (!empty($image['model'])))
+                    {
+                        # Create the dropdown for the images
+                        $addCamera = '<button type="button" class="btn btn-default btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+                                            ' . icon("camera") . ' <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu" style="width: 350px; padding: 15px;">
+                                            <li>
+                                                <p>
+                                                    <strong>Camera Settings</strong>
+                                                </p>
+                                            </li>';
+
+                        # Which fields are we getting the data from?
+                        $fields = array("make", "model", "iso", "aperture", "exposure");
+
+                        # Let's get the data
+                        foreach($fields as $field)
+                        {
+                            $addCamera .= "<li>";
+
+                            # Let's only add the data which is populated
+                            if (!empty($image[$field]))
+                            {
+                                # Add the spans
+                                $addCamera .= "<strong><span style='width: 100px; test-align: left;' align='left' class='pull-left'>" . ucfirst($field) . "</span></strong>";
+                                $addCamera .= "<span align='left' class='pull-left' style='width: 200px;'>" . $this->exposure($image[$field]) . "</span>";
+                                $addCamera .= "<span class='clearfix'></span>";
+                            }
+
+                            $addCamera .= '</li>';
+                        }
+
+                        $addCamera .= '</ul>';
+                    }
+
+                    # Define the buttons we will be using
+                    $btnDownload    = href($this->pathLarge . $image['image'], icon("download"), "danger btn-sm", "Download Image", "_BLANK");
+                    $btnEdit        = ($this->Auth->isAdmin()) ? '<a class="btn btn-sm btn-success" href="#"  data-toggle="modal" data-target="#modal' . $image['id'] . '">' . icon('pencil') . '</a>' . $modal : "";
+
                     # Add each image tile to be displayed
                     $out .= '<span>
                                 <a style="text-decoration: none;" href="' . $this->pathLarge . $image['image'] . '" data-lightbox="' . $group . '" title="' . $image['name'] . " - " . $image['desc'] . '">
                                     <img class="collage" data-id="' . $image['id'] . '" src="' . $this->pathThumb . $image['image'] . '" alt="' . $image['name'] . '"/>
                                 </a>
-                                ' . href($this->pathLarge . $image['image'], icon("download"), "danger btn-sm downloadBtn", "", "_BLANK") . '
+                                <div class="downloadBtn btn-group">
+                                    ' . $btnDownload . '
+                                    ' . $addCamera . '
+                                    ' . $btnEdit . '
+                                </div>
                             </span>';
+
+                    /*
+
+                    # I would like to see if the image has camera information. Let's add a button to display it
+
+                    # Add the tile
+                    $out .= '<span class="portfolioTiles" data-id="' . $image['id'] . '">
+                                <a style="text-decoration: none;" href="#"  data-toggle="modal" data-target="#modal' . $image['id'] . '">
+                                    <img class="img-thumbnail" data-id="' . $image['id'] . '" src="' . $this->pathThumb . $image['image'] . '" alt=""/>
+                                </a>
+                                <div class="btn-group actions" align="right">
+                                    <a class="btn btn-sm btn-default" target="_BLANK" href="' . $this->pathLarge . $image['image'] . '">' . icon('fullscreen') . '</a>
+                                    <a class="btn btn-sm btn-success" href="#"  data-toggle="modal" data-target="#modal' . $image['id'] . '">' . icon('pencil') . '</a>
+                                    <a class="btn btn-sm btn-danger" href="?action=drop&id=' . $image['id'] . '">' . icon('trash') . '</a>
+                                    ' . $addCamera . '
+                                </div>
+                                ' . $modal . '
+                            </span>';
+
+                    */
                 }
 
                 # Clearfixing just in case.
@@ -270,6 +429,34 @@
 
             # Return the output
             return $out;
+        }
+
+
+        # I would like a generic function to get the exposure time
+        public function exposure($in)
+        {
+            # Attempt to split with the forward slash
+            $split = explode('/', $in);
+            if (count($split) == 2)
+            {
+                # Seconds
+                if (end($split) == 1)
+                {
+                    $exposure = $split[0] . " seconds";
+                }
+
+                # nth of a second
+                else
+                {
+                    $exposure = $split[1] . "th of a second";
+                }
+
+                # Return the exposure
+                return $exposure;
+            }
+
+            # Otherwise return the incoming value
+            return $in;
         }
 
 
@@ -444,7 +631,7 @@
                             # Let's only add the data which is populated
                             if (!empty($image[$field]))
                             {
-                                $cameraInfo .= "<p><strong><span class='col-sm-5'>" . ucfirst($field) . "</span></strong> " . $image[$field] . "</p>";
+                                $cameraInfo .= "<p><strong><span class='col-sm-5'>" . ucfirst($field) . "</span></strong> " . $this->exposure($image[$field]) . "</p>";
                             }
                         }
 
