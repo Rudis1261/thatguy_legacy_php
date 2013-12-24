@@ -16,7 +16,7 @@
 */
 
 require 'fb/src/facebook.php';
-$fbPage = "147906525337534";
+$fbPage = "1426198487614346";
 
 // Create our Application instance (replace this with your appId and secret).
 $facebook = new Facebook(array(
@@ -69,7 +69,7 @@ if (isset($_SESSION['fb_' . Options::get('fbKey') . '_access_token']))
     Options::set('fbUserToken', $access_token);
   }
 }
-
+/*
 // NOW LETS GET THE PAGE TOKEN
 $getPages = file_get_contents("https://graph.facebook.com/me/accounts?access_token=" . Options::get('fbUserToken'));
 $getPages = json_decode($getPages);
@@ -88,4 +88,4 @@ foreach($getPages->data as $page)
 }
 
 // Enable the site
-$facebook->setFileUploadSupport("http://" . $_SERVER['SERVER_NAME']);
+$facebook->setFileUploadSupport("http://" . $_SERVER['SERVER_NAME']);*/

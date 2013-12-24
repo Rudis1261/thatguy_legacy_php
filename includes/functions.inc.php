@@ -1427,24 +1427,16 @@
 
 
     # Let's create some links quickly and easily
-    function href($url, $name, $btn=false, $title="")
+    function href($url, $name, $btn=false, $title="", $target="")
     {
-        $add = ($btn) ? ' class="btn btn-default btn-' . $btn . ' "' : "";
-        $out = '<a href="' . $url . '" title="' . $title . '" ' . $add . '>' . $name . '</a>';
+        # Let's play with the options
+        $add        = ($btn)                ? ' class="btn btn-default btn-' . $btn . ' "'  : "";
+        $target     = (!empty($target))     ? ' target="' . $target . '" '                  : "";
+
+        $out = '<a href="' . $url . '" title="' . $title . '" ' . $add . $target . '>' . $name . '</a>';
         return $out;
     }
 
-    /*function cleanse($string)
-    {
-        $string = str_replace('–', '-', $string);
-        $string = @iconv("UTF-8", "ISO-8859-1//IGNORE", $string);
-        $string = @iconv("ISO-8859-1", "UTF-8", $string);
-
-        $string = htmlentities($string);
-        $string = str_replace("'", "&apos;", $string);
-
-        return $string;
-    }*/
 
     function cleanse($string)
     {

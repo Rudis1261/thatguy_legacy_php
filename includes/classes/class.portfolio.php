@@ -112,6 +112,8 @@
         # What should be displayed when the user gets to the page?
         public function defaultView()
         {
+            //require_once("API/facebook.php");
+
             # Start the output
             $out = "";
 
@@ -187,23 +189,31 @@
             # Loop through the types and create the button group
             foreach($this->types as $t)
             {
+                # We will need to know if we have the current type
                 $found = false;
+
+                # Loop through the images
                 foreach($this->images as $i)
                 {
+                    # Check whether images for the type exists
                     if (strstr($i['type'], $t))
                     {
+                        # Yeah buddy, break out of the loop
                         $found = true;
                         break;
                     }
                 }
 
+                # Cool so the type actually has some images to be displayed
                 if ($found !== false)
                 {
+                    # Now let's also check if it's the currently selected type?
                     $active = (($type !== false) AND ($type== $t)) ? " active " : "";
-                    $out .= '<a class="btn btn-default' . $active . '" href="?type=' . $t . '">' . $t . '</a>';
+                    $out .= '<a class="btn btn-default ' . $active . '" href="?type=' . $t . '">' . $t . '</a>';
                 }
             }
 
+            # Close the btn group off
             $out .= "</div>";
 
             # No type defined, consider all the images
@@ -226,6 +236,7 @@
                 }
             }
 
+            # Add the pager and start the container output
             $out .= $this->pager($images);
             $out .= "<div class='publisher'>";
 
@@ -240,16 +251,97 @@
                 # Loop through the chunk
                 foreach($chunks[($this->page - 1)] as $image)
                 {
-                    $out .= '<a style="text-decoration: none;" href="' . $this->pathLarge . $image['image'] . '" data-lightbox="' . $group . '" title="' . $image['name'] . " - " . $image['desc'] . '">
-                                <img class="collage" data-id="' . $image['id'] . '" src="' . $this->pathThumb . $image['image'] . '" alt="' . $image['name'] . '"/>
-                            </a>';
+                    # Add each image tile to be displayed
+                    $out .= '<span>
+                                <a style="text-decoration: none;" href="' . $this->pathLarge . $image['image'] . '" data-lightbox="' . $group . '" title="' . $image['name'] . " - " . $image['desc'] . '">
+                                    <img class="collage" data-id="' . $image['id'] . '" src="' . $this->pathThumb . $image['image'] . '" alt="' . $image['name'] . '"/>
+                                </a>
+                                ' . href($this->pathLarge . $image['image'], icon("download"), "danger btn-sm downloadBtn", "", "_BLANK") . '
+                            </span>';
                 }
+
+                # Clearfixing just in case.
                 $out .= "<div class='clearfix'></div>";
             }
 
+            # Close of the contained and add a pager at the footer.
             $out .= "</div>";
             $out .= $this->pager($images);
+
+            # Return the output
             return $out;
+        }
+
+
+        # I want to know if there are any commonly used words in a set of images.
+        # The more it's used the greater I would like the text to be
+        public function keyWords($imageArray)
+        {
+            $largest    = 25;
+            $smallest   = 16;
+            $words      = array();
+            $find       = array(".", ",");
+            $replace    = array("", "");
+
+            # Check whether we were handed an array
+            if (is_array($imageArray))
+            {
+                # Loop through the images
+                foreach($imageArray as $image)
+                {
+                    # Replace the stuff we are not interested in
+                    $image['name']  = str_replace($find, $replace, $image['name']);
+                    $image['desc']  = str_replace($find, $replace, $image['desc']);
+
+                    # Explode by space
+                    $titleWords     = explode(" ", $image['name']);
+                    $allWords       = explode(" ", $image['desc']);
+
+                    # Combine the 2 arrays
+                    //$allWords       = array_merge($titleWords, $descWords);
+                    //$allWords       = array_unique($allWords);
+
+                    # Loop through the words array
+                    foreach($allWords as $word)
+                    {
+                        # Let's stick to lowercase
+                        $word = strtolower($word);
+
+                        # And remove all the words which are to short
+                        if (strlen($word) < 4)
+                        {
+                            continue;
+                        }
+
+                        # If the index exists, let's increment it
+                        if (isset($words[$word]))
+                        {
+                            $words[$word] = $words[$word] + 1;
+                        }
+
+                        # Otherwise initialize it
+                        else
+                        {
+                            $words[$word] = 1;
+                        }
+                    }
+                }
+            }
+
+            if (!empty($words))
+            {
+                $max = max($words);
+                echo "<div class='row'>";
+                foreach($words as $word=>$count)
+                {
+                    $size = ceil($largest / $count);
+                    echo "<div style='font-size: " . $size . "px'>&nbsp;&nbsp;" . ucfirst($word) . "&nbsp;&nbsp;</div>";
+                }
+                echo "</div>";
+            }
+
+            //printr($words);
+            return false;
         }
 
 

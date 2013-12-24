@@ -1,3 +1,4 @@
+
 .portfolioTiles {
   padding-right: 10px;
   line-height: 175px;
@@ -14,7 +15,6 @@
   border: 1px solid grey;
 }
 
-
 .portfolioTiles p {
   line-height: 18px;
 }
@@ -24,7 +24,6 @@
   width: 240px;
   border: 1px solid grey;
 }
-
 
 .publisher {
   text-align: center;
@@ -36,14 +35,11 @@
 }
 
 .downloadBtn {
-  z-index: 100;
-  margin-left: -225px;
-  height: 68px;
-  text-align: right;
-  margin-top: -68px;
+  position: relative;
+  top: 50px;
+  left: -239px;
+  margin-right: -40px;
 }
-
-
 
 .actions {
   z-index: 100;
@@ -54,14 +50,12 @@
   margin-top: -68px;
 }
 
-
 .modal-footer {
   line-height: 20px;
 }
 
 
 @media (min-width: 768px) and (max-width: 979px) {
-
 
     .publisher {
       padding: 5px 20px;
@@ -88,6 +82,10 @@
         width: 200px;
     }
 
+    .downloadBtn {
+      top: 36px;
+      left: -199px;
+    }
 }
 
 
@@ -118,5 +116,10 @@
 
   .portfolioTiles > a > img {
       width: 140px;
+  }
+
+  .downloadBtn {
+      top: 22px;
+      left: -145px;
   }
 }
