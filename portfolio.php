@@ -46,6 +46,12 @@ switch($action)
         break;
 
 
+    # Initiate the class
+    case "init":
+        $Portfolio->initServices();
+        break;
+
+
     # Dropping images like they are hot
     case "drop":
 

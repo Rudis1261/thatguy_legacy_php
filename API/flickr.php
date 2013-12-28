@@ -1,29 +1,43 @@
 <?php
 
-// Check if we have a token
-if (Options::get('flickrToken') == '')
+# Start off by getting the Flickr Token
+$getToken       = Options::get('flickrToken');
+$flickrKey      = Options::get('flickrKey');
+$flickrSecret   = Options::get('flickrSecret');
+
+# No token, get it!
+if (empty($getToken))
 {
-    // Instantiate the Flickr PHP
+    # Fire up the flickr class
     $f = new phpFlickr($flickrKey, $flickrSecret);
-    if (empty($_GET['frob'])) {
+
+    # Non-redirected version do auth which will redirect back
+    if (empty($_REQUEST['frob']))
+    {
         $f->auth('delete', false);
-    } else {
-        $getToken = $f->auth_getToken($_GET['frob']);
-        Options::set('flickrToken', $getToken['token']);
     }
 
-// We have a token, lets start and get authed up
-} else if ($Auth->isAdmin()) {
+    # We have a frob, get the token
+    else
+    {
+        $getToken = $f->auth_getToken($_REQUEST['frob']);
+        Options::set('flickrToken', $getToken['token']);
+    }
+}
+
+# Otherwise we have the token and can set it
+else
+{
     $f = new phpFlickr($flickrKey, $flickrSecret);
-    $f->setToken($flickrToken);
+    $f->setToken($getToken);
     $f->auth("delete");
 }
 
 
-if ((isset($_GET['dump']))
-&& ($Auth->isAdmin()))
+# Debugging tiem
+if (isset($_GET['dump']))
 {
-    $msg = "<div class='alert alert-info col-lg-5'>";
+    $msg = "<div class='alert alert-info span5'>";
     $msg .= "<h1>Flicker Details</h1>";
     $msg .= "Flicker Key: " . $flickrKey . "<br />";
     $msg .= "Flicker Secret: " . $flickrSecret . "<br />";

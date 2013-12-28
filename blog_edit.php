@@ -77,14 +77,18 @@ if ($action)
     // All checking done, create it
     if (($editBlog == 2) AND ($Error->ok()==false))
     {
+        $DESCRIPTION    = strip_tags($_POST['desc']);
+        $BODY           = strip_tags($_POST['text']);
+
         if ($id)
         {
-        	$save = $blog->edit($_POST['id'], strip_tags($_POST['desc']), strip_tags($_POST['text']));
+        	$save = $blog->edit($id, $DESCRIPTION, $BODY);
         }
 
+        # This is a new entry
         else
         {
-            $save = $blog->create(strip_tags($_POST['desc']), strip_tags($_POST['text']), $Auth->id);
+            $save = $blog->create($DESCRIPTION, $BODY, $Auth->id);
         }
 
         if ($save == false)
@@ -115,7 +119,15 @@ if ($action)
                         {
                             # Move to uploads with a new unique name
                             $newName        = uniqid(16);
-                            $newPathname    = "assets/uploads/" . $newName . "." . $ext;
+                            $dir            = "uploads/blog/";
+                            $newPathname    = $dir . $newName . "." . $ext;
+
+                            # Ensure that the directory exists
+                            if (!file_exists($dir))
+                            {
+                                # Otherwise create it
+                                mkdir($dir);
+                            }
 
                             # Move the file
                             move_uploaded_file($_FILES["upload"]["tmp_name"][$uid], $newPathname);
@@ -140,12 +152,63 @@ if ($action)
                 }
             }
 
+            # A new blog gets sent to facebook
+            if ($id == false)
+            {
+                # Send it to facebook
+                require("API/facebook.php");
+
+                $string = $BODY;
+                $string = BBCode::codify($string);
+                $string = BBCode::mailify($string);
+                $string = BBCode::decode($string);
+                $string = BBCode::linkify($string);
+                $string = strip_tags($string);
+
+                # Post to ThatGuy
+                $fbBlogPost = $facebook->api('/147906525337534/feed', 'POST',
+                    array(
+                        'link'          => full_url_to_script('blog.php'),
+                        'name'          => $DESCRIPTION . ", " . dater(time(), 'd M Y'),
+                        'description'   => "See what I have been up to",
+                        'caption'       => "Open the blog",
+                        'message'       => $string,
+                        'access_token'  => $fbPageToken
+                    )
+                );
+
+                # Post to my Facebook
+                $fbBlogPost = $facebook->api('/me/feed', 'POST',
+                    array(
+                         'link'          => "https://www.facebook.com/thatguy.co.za",
+                        'name'          => $DESCRIPTION . ", " . dater(time(), 'd M Y'),
+                        'description'   => "See what I have been up to",
+                        'caption'       => "Check out my page",
+                        'message'       => $string,
+                        'access_token'  => $fbUserToken
+                    )
+                );
+            }
+
+            # Check that the new images are not empty
             if (!empty($new_uploads))
     	    {
+                # Add the images to the desc
+                $appendImages   = $BODY;
+                $blogId         = ($id == false) ? $save : $id;
+
+                # We need to add the upload to the db as well as the post
         		foreach($new_uploads as $upload)
         		{
-        		    $blog->uploads_add($Auth->id, $blog->id, $upload);
+                    # Book the upload into the db
+        		    $blog->uploads_add($Auth->id, $blogId, $upload);
+
+                    # Append the image to the blog body
+                    $appendImages .= PHP_EOL . "[img]" . $upload . "[/img]";
         		}
+
+                # Update the blog by appending the images
+                $blog->edit($blogId, $DESCRIPTION, $appendImages);
     	    }
     	    redirect('blog.php'); // Redirect to the display page
     	}

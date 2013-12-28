@@ -102,7 +102,7 @@ Options::addOnce('apiLive', true, 'bool', 'API Settings');
 
 Options::addOnce('fbKey', '', 'input', 'API Settings');
 Options::addOnce('fbSecret', '', 'input', 'API Settings');
-Options::addOnce('fbToken', '', 'input', 'API Settings');
+Options::remove('fbToken');//, '', 'input', 'API Settings');
 Options::addOnce('fbUserToken', '', 'input', 'API Settings');
 Options::addOnce('fbPageToken', '', 'input', 'API Settings');
 

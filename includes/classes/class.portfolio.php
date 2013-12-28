@@ -18,13 +18,15 @@
         public $page;
 
         # Runtime variables
-        public $script      = "portfolio.php";
-        public $path        = "uploads/";
-        public $pathThumb   = "uploads/thumb/";
-        public $pathMedium  = "uploads/medium/";
-        public $pathLarge   = "uploads/large/";
+        public $script          = "portfolio.php";
+        public $path            = "uploads/";
+        public $pathThumb       = "uploads/thumb/";
+        public $pathMedium      = "uploads/medium/";
+        public $pathLarge       = "uploads/large/";
+        public $services        = array("facebook", "flickr", "da");
+        public $cameraFields    = array("make", "model", "iso", "aperture", "exposure");
 
-        public $sizes       = array(
+        public $sizes           = array(
             "pathLarge"     => array("w"=>2560, "h"=>1600, "q"=>85),
             "pathMedium"    => array("w"=>960, "h"=>600, "q"=>85),
             "pathThumb"     => array("w"=>250, "h"=>160, "q"=>90)
@@ -47,7 +49,10 @@
                 'make',
                 'model',
                 'published',
-                'timestamp'
+                'timestamp',
+                'facebook',
+                'flickr',
+                'da'
             );
 
             parent::__construct('portfolio', /*$columns,*/ $id);
@@ -285,11 +290,8 @@
                         # We have info, let's add it
                         $cameraInfo .= "<div align='left'>";
 
-                        # Which fields are we getting the data from?
-                        $fields = array("make", "model", "iso", "aperture", "exposure");
-
                         # Let's get the data
-                        foreach($fields as $field)
+                        foreach($this->cameraFields as $field)
                         {
                             # Let's only add the data which is populated
                             if (!empty($image[$field]))
@@ -331,6 +333,7 @@
                                                         ' . bool_select($image['published'], "published") . '
                                                     </div>
                                                     ' . $types . '
+                                                    ' . $this->publishTypes($image) . '
                                                 </form>
                                             </div>
                                             <div class="clearfix"></div>
@@ -555,6 +558,43 @@
         }
 
 
+        # Get the publish types available
+        public function publishTypes($imageArray)
+        {
+            $output     = "<div class='form-group' style='line-height: 18px;'><hr />";
+            $output    .= '<div>';
+
+            # Loop through the types
+            foreach($this->services as $type)
+            {
+                # Check that the image has not yet been published
+                if (empty($imageArray[$type]))
+                {
+                    $output .= '<div align="left" class="pull-left">
+                                    <label>
+                                        <input value="' . time() . '" name="' . $type . '" type="checkbox">
+                                        <img  width="35" height="35" src="assets/img/' . $type . '.jpg" alt="' . $type . '"/>
+                                        &nbsp;&nbsp;&nbsp;
+                                    </label>
+                                </div>';
+                }
+
+                else
+                {
+                    $output .= '<div align="left" class="pull-left">
+                                    <label>
+                                        <img width="35" height="35" src="assets/img/' . $type . '.jpg" alt="' . $type . '"/>
+                                        &nbsp;&nbsp;&nbsp;
+                                    </label>
+                                </div>';
+                }
+            }
+
+            $output .= '</div></div>';
+            return $output;
+        }
+
+
         # The publisher is the page which will be used to complete the image details
         public function publisher()
         {
@@ -604,11 +644,8 @@
                         # We have info, let's add it
                         $cameraInfo .= "<div align='left'>";
 
-                        # Which fields are we getting the data from?
-                        $fields = array("make", "model", "iso", "aperture", "exposure");
-
                         # Let's get the data
-                        foreach($fields as $field)
+                        foreach($this->cameraFields as $field)
                         {
                             # Let's only add the data which is populated
                             if (!empty($image[$field]))
@@ -650,6 +687,7 @@
                                                         ' . bool_select($image['published'], "published") . '
                                                     </div>
                                                     ' . $types . '
+                                                    ' . $this->publishTypes($image) . '
                                                 </form>
                                             </div>
                                             <div class="clearfix"></div>
@@ -961,7 +999,6 @@
             }
 
             # Update the details
-            $p->type        = (isset($info['type'])) ? json_encode($info['type']) : "";
             $p->image       = $info['image'];
             $p->name        = $info['name'];
             $p->desc        = $info['desc'];
@@ -972,6 +1009,12 @@
             $p->model       = $info['model'];
             $p->published   = $info['published'];
             $p->timestamp   = $info['timestamp'];
+
+            $p->type        = (isset($info['type'])) ? json_encode($info['type']) : "";
+            $p->facebook    = (isset($info['facebook']))    ? $info['facebook']     : "";
+            $p->flickr      = (isset($info['flickr']))      ? $info['flickr']       : "";
+            $p->da          = (isset($info['da']))          ? $info['da']           : "";
+
 
             # Check whether we should be inserting
             if (is_null($id))
@@ -992,6 +1035,7 @@
             }
             return false;
         }
+
 
         public function upsert($id)
         {
@@ -1023,6 +1067,16 @@
                     }
                 }
 
+                # Check whether we should publish an image to the various services
+                foreach($this->services as $type)
+                {
+                    if (isset($_REQUEST[$type]))
+                    {
+                        # Dispatch it to the method to post the image
+                        $this->$type($image);
+                    }
+                }
+
                 # Write the image's new data to DB
                 $write = $this->write($image);
 
@@ -1037,5 +1091,92 @@
             # Default to failed state
             echo "failure";
             return false;
+        }
+
+
+        # Fire up the Service API's
+        public function initServices()
+        {
+            require("API/facebook.php");
+            require("API/flickr.php");
+        }
+
+
+        # Hook into the facebook API
+        public function facebook($image)
+        {
+            # Hook into the API's we need
+            require("API/facebook.php");
+
+            $fbPageToken = Options::get('fbPageToken');
+
+            // add a status message
+            $photo = $facebook->api('/147906525337534/photos', 'POST',
+                array(
+                    'image' => '@' . realpath($this->pathLarge . $image['image']),
+                    'message' => $image['name'],
+                    'access_token' => $fbPageToken,
+                )
+            );
+        }
+
+
+        # Flickr needs it's own set of posting
+        public function flickr($image)
+        {
+            # Hook into the Flickr API
+            require("API/flickr.php");
+
+            # Send the image to Flickr
+            $f->sync_upload(
+                $this->pathLarge . $image['image'],
+                $image['name'],
+                $image['desc'],
+                NULL,
+                1,
+                0,
+                0
+            );
+        }
+
+
+        # We will be using the DA Stash method of posting
+        public function da($image)
+        {
+            # Get the details from the options
+            $daEmailAddress = Options::get('daEmailAddress');
+            $daEmailFrom    = Options::get('daEmailFrom');
+            $cameraInfo     = "";
+
+            foreach($this->cameraFields as $field)
+            {
+                if (!empty($image[$field]))
+                {
+                    if (empty($cameraInfo)) $cameraInfo = "<hr />";
+                    $cameraInfo .= "<b>" . strtoupper($field) . "</b>: " . $image[$field] . "<br />";
+                }
+            }
+
+            # Fire up the php mailer class
+            $daMail         = new PHPMailer(true);
+            $daMail->AddAddress($daEmailAddress, 'DA Stash');
+            //$daMail->AddAddress('iam@thatguy.co.za', 'DA Stash');
+            $daMail->SetFrom($daEmailFrom, 'ThatGuy.co.za');
+            $daMail->Subject = $image['name'];
+            $daMail->AltBody = $image['desc'] . $cameraInfo;
+            $daMail->MsgHTML($image['desc'] . $cameraInfo);
+            $daMail->AddAttachment($this->pathLarge . $image['image']); // Attach the image
+
+            # Attempt to send the mail
+            try
+            {
+              $daMail->Send();
+            }
+
+            # And catch an exception
+            catch (phpmailerException $e)
+            {
+              $Error->add('error',$e->errorMessage());
+            }
         }
     }

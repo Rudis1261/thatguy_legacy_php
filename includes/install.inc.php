@@ -210,6 +210,9 @@ if (($dbInstallDate !== $lastEdit) OR ($dbInstallFilesize !== $fileSize))
   addColumn("portfolio", '`make`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`model`', "VARCHAR(65)", "default ''");
   addColumn("portfolio", '`published`', "INT(1)", "default 0");
+  addColumn("portfolio", '`facebook`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`flickr`', "VARCHAR(65)", "default ''");
+  addColumn("portfolio", '`da`', "VARCHAR(65)", "default ''");
 
   // We will definitely need a meta page to be able to control the various metas in various aspects of our application
   createTable("meta", "id int(255) UNSIGNED NOT NULL", True, True);
