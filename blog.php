@@ -29,6 +29,13 @@ $CSS->add('blog.css');
 $CSS->output('blog.css');
 $CSS->export();
 
+# Ensure we are an admin before hooking into the FB API
+if ($Auth->loggedIn() AND $Auth->isAdmin())
+{
+    # Hoop into the FB api
+    require("API/facebook.php");
+}
+
 // Variables
 $blogList       = array();
 $page           = (isset($_GET['page'])) ? $_GET['page'] : 1;

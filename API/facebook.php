@@ -41,26 +41,34 @@ if ($fbApiUsername) {
     error_log($e);
     $fbApiUsername = null;
   }
+
+  #DEBUG
+  if (isset($_REQUEST['debug']))
+  {
+    $logoutUrl = $facebook->getLogoutUrl();
+    echo '<div class="container">
+       <a class="btn btn-danger" href="'. $logoutUrl .'">FB Logout</a>
+      </div>';
+  }
 }
 
 # Could not get the user's details from the cookie, display the login urls
 else
 {
-  $logoutUrl = $facebook->getLogoutUrl();
   $loginUrl = $facebook->getLoginUrl();
+  file_get_contents($loginUrl);
 
-?>
-
-  <div class="container">
-    <a class="btn" href="<?php echo $loginUrl; ?>">Force FB Login</a> <a class="btn" href="<?php echo $logoutUrl; ?>">FB Logout</a>
-  </div>
-
-  <div class="container">
-    <a class="btn" href="<?php echo $loginUrl; ?>">Force FB Login</a>
-  </div>
-
-<?php
+  #DEBUG
+  if (isset($_REQUEST['debug']))
+  {
+    echo '<div class="container">
+            <a class="btn btn-success" href="'. $loginUrl . '">Force FB Login</a>
+          </div>';
+  }
 }
+
+#DEBUG
+if (isset($_REQUEST['debug'])) echo "<br />SESSION INFO:" . print_r($_SESSION);
 
 // USER TOKEN
 // Get the token from the PHP headers and check if it's reflecting locally or not
@@ -69,6 +77,10 @@ if (isset($_SESSION['fb_' . Options::get('fbKey') . '_access_token']))
   // Compare the access token to that stored in the DB
   $access_token = $_SESSION['fb_' . Options::get('fbKey') . '_access_token'];
   $last_obtained = Options::get('fbUserToken');
+
+  #DEBUG
+  if (isset($_REQUEST['debug']))  echo "<br /><b>OLD User Token:</b> " . $last_obtained . "<br />";
+  if (isset($_REQUEST['debug']))  echo "<br /><b>NEW User Token:</b> " . $access_token . "<br />";
 
   if ($access_token !== $last_obtained)
   {
@@ -79,27 +91,28 @@ if (isset($_SESSION['fb_' . Options::get('fbKey') . '_access_token']))
 // NOW LETS GET THE PAGE TOKEN
 $faceBookPageToken = Options::get('fbPageToken');
 
-# Check that the facebook token is not empty, and then attempt to get it
-if (empty($faceBookPageToken))
-{
-  # Get the account access token
-  $getPagesUrl = "https://graph.facebook.com/me/accounts?access_token=" . Options::get('fbUserToken');
-  $getPages = file_get_contents($getPagesUrl);
-  $getPages = json_decode($getPages);
+# Get the account access token
+$getPagesUrl = "https://graph.facebook.com/me/accounts?access_token=" . Options::get('fbUserToken');
+$getPages = file_get_contents($getPagesUrl);
+$getPages = json_decode($getPages);
 
-  # Loop through the pages and get the access token
-  foreach($getPages->data as $page)
+# Loop through the pages and get the access token
+foreach($getPages->data as $page)
+{
+  if ($page->id == $fbPage)
   {
-    if ($page->id == $fbPage)
+    $access_token = $page->access_token;
+    $last_obtained = Options::get('fbPageToken');
+
+    #DEBUG
+    if (isset($_REQUEST['debug']))  echo "<br /><b>New Page Token:</b> " . $access_token . "<br />";
+    if (isset($_REQUEST['debug']))  echo "<br /><b>Old Page Token:</b> " . $last_obtained . "<br />";
+
+    if ($access_token !== $last_obtained)
     {
-      $access_token = $page->access_token;
-      $last_obtained = Options::get('fbPageToken');
-      if ($access_token !== $last_obtained)
-      {
-        Options::set('fbPageToken', $access_token);
-      }
-      break;
+      Options::set('fbPageToken', $access_token);
     }
+    break;
   }
 }
 

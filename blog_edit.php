@@ -43,6 +43,12 @@ if ($action == "unlink")
     exit();
 }
 
+# Ensure we are an admin before hooking into the FB API
+if ($Auth->loggedIn() AND $Auth->isAdmin())
+{
+    # Hoop into the FB api
+    require("API/facebook.php");
+}
 
 // Create Blog
 if ($action)
@@ -155,9 +161,6 @@ if ($action)
             # A new blog gets sent to facebook
             if ($id == false)
             {
-                # Send it to facebook
-                require("API/facebook.php");
-
                 $string = $BODY;
                 $string = BBCode::codify($string);
                 $string = BBCode::mailify($string);
