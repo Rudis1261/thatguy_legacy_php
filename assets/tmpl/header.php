@@ -75,6 +75,7 @@ function displayMenu($menuList)
     <meta charset="utf-8">
     <title><?php if($title) { echo strip_tags($title); } else { echo "ThatGuy.co.za"; } ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta rel="author" content="https://plus.google.com/109627982720737965997">
     <meta name="description" content="<?php echo Options::get('metaDesc'); ?>">
     <meta name="author" content="<?php echo Options::get('metaAuthor'); ?>">
     <meta name="keywords" content="<?php echo Options::get('metaKeyWords'); ?>">

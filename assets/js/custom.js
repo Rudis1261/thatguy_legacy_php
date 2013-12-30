@@ -133,24 +133,81 @@ $(document).ready(function() {
 
 	$("#container").attr("data-value", $("#container").width());
 
-    // Hook into the confirm plugin for general actions
-    $(".confirm").confirm({
-        text: "Are you sure you want to continue?"
-    });
-
     $('input[type=file]').bootstrapFileInput();
     $('.file-inputs').bootstrapFileInput();
 
-    // Hook into the confirm plugin for deletions
-    $(".confirmDelete").confirm({
-        text: "Are you sure you want to continue deleting this entry?",
-        post: true
+
+    // Hook into the confirm plugin for general actions
+    $(".confirm").click(function(event){
+
+        event.preventDefault();
+        var link = $(this).attr('href');
+
+        // Inject a Popover
+        var buttons = '<a class="confirm btn btn-primary" href="' + link + '">'
+            +   '<span style="color: white;" class="glyphicon glyphicon-ok"></span>'
+            + '</a>'
+            + '<button class="cancel btn btn-default" type="button" data-dismiss="modal">'
+            +   '<span style="color: white;" class="glyphicon glyphicon-remove"></span>'
+            + '</button>';
+
+        var modalHTML = '<div class="modal fade">'
+            + '<div class="modal-dialog">'
+            + '<div class="modal-content">'
+            + '<div class="modal-header">'
+            + '<a href="#" class="close" data-dismiss="modal">'
+            + '<span style="color: white;" class="glyphicon glyphicon-remove"></span>'
+            + '</a>'
+            + '<h4 class="modal-title">Please confirm</h4>'
+            + '</div>'
+            + '<div class="modal-body">Are you sure you want to continue?</div>'
+            + '<div class="modal-footer">' + buttons + '</div>'
+            + '</div>'
+            + '</div>'
+            + '</div>';
+
+        var modal = $(modalHTML);
+
+        // Show the modal
+        $("body").append(modal);
+        modal.modal();
     });
 
 
-    // Hook into the confirm plugin for untracking
-    $(".confirmUntrack").confirm({
-        text: "Are you sure you want to no longer track this show?"
+    // Hook into the confirm plugin for deletions
+    $(".confirmDelete").click(function(event){
+
+        event.preventDefault();
+        var link = $(this).attr('href');
+
+        // Inject a Popover
+        var buttons = '<a class="confirm btn btn-primary" href="' + link + '">'
+            +   '<span style="color: white;" class="glyphicon glyphicon-ok"></span>'
+            + '</a>'
+            + '<button class="cancel btn btn-default" type="button" data-dismiss="modal">'
+            +   '<span style="color: white;" class="glyphicon glyphicon-remove"></span>'
+            + '</button>';
+
+        var modalHTML = '<div class="modal fade">'
+            + '<div class="modal-dialog">'
+            + '<div class="modal-content">'
+            + '<div class="modal-header">'
+            + '<a href="#" class="close" data-dismiss="modal">'
+            + '<span style="color: white;" class="glyphicon glyphicon-remove"></span>'
+            + '</a>'
+            + '<h4 class="modal-title">Please confirm</h4>'
+            + '</div>'
+            + '<div class="modal-body">Are you sure you want to delete the entry?</div>'
+            + '<div class="modal-footer">' + buttons + '</div>'
+            + '</div>'
+            + '</div>'
+            + '</div>';
+
+        var modal = $(modalHTML);
+
+        // Show the modal
+        $("body").append(modal);
+        modal.modal();
     });
 
 

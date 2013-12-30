@@ -86,6 +86,7 @@ Options::remove('imageThumbWidth');
 Options::addOnce('firstName', 'John', 'input', 'User Settings');
 Options::addOnce('surname', 'Doe', 'input', 'User Settings');
 Options::addOnce('dateOfBirth', '631144800', 'date', 'User Settings');
+Options::addOnce('googlePlusAccount', '', 'input', 'User Settings');
 Options::remove('TVTrackerHowManyDaysBack');
 Options::remove('TVTrackerHowManyDaysForward');
 Options::remove('TVTrackerEmail');

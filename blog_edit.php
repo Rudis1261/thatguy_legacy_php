@@ -161,17 +161,21 @@ if ($action)
             # A new blog gets sent to facebook
             if ($id == false)
             {
-                $string = $BODY;
-                $string = BBCode::codify($string);
-                $string = BBCode::mailify($string);
-                $string = BBCode::decode($string);
-                $string = BBCode::linkify($string);
-                $string = strip_tags($string);
+                $string     = $BODY;
+                $string     = BBCode::codify($string);
+                $string     = BBCode::mailify($string);
+                $string     = BBCode::decode($string);
+                $string     = BBCode::linkify($string);
+                $string     = strip_tags($string);
+                $blogUrl    = full_url_to_script('blog.php') . "?article=" . rawurlencode($DESCRIPTION) . "#" . rawurlencode($DESCRIPTION);
+
+                # Hook into FACEBOOK
+                require("API/facebook.php");
 
                 # Post to ThatGuy
                 $fbBlogPost = $facebook->api('/147906525337534/feed', 'POST',
                     array(
-                        'link'          => full_url_to_script('blog.php'),
+                        'link'          => $blogUrl,
                         'name'          => $DESCRIPTION . ", " . dater(time(), 'd M Y'),
                         'description'   => "See what I have been up to",
                         'caption'       => "Open the blog",

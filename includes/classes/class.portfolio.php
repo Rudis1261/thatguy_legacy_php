@@ -388,7 +388,7 @@
                     # Define the buttons we will be using
                     $btnDownload    = href($this->pathLarge . $image['image'], icon("download"), "danger btn-sm", "Download Image", "_BLANK");
                     $btnEdit        = ($this->Auth->isAdmin()) ? '<a class="btn btn-sm btn-success" href="#"  data-toggle="modal" data-target="#modal' . $image['id'] . '">' . icon('pencil') . '</a>' . $modal : "";
-                    $btnDelete      = ($this->Auth->isAdmin()) ? '<a class="btn btn-sm btn-default" href="?action=drop&id=' . $image['id'] . '">' . icon('trash') . '</a>' : "";
+                    $btnDelete      = ($this->Auth->isAdmin()) ? '<a class="btn btn-sm btn-default confirmDelete" href="?action=drop&id=' . $image['id'] . '">' . icon('trash') . '</a>' : "";
 
                     # Add each image tile to be displayed
                     $out .= '<span>
@@ -711,7 +711,7 @@
                                 <div class="btn-group actions" align="right">
                                     <a class="btn btn-sm btn-default" target="_BLANK" href="' . $this->pathLarge . $image['image'] . '">' . icon('fullscreen') . '</a>
                                     <a class="btn btn-sm btn-success" href="#"  data-toggle="modal" data-target="#modal' . $image['id'] . '">' . icon('pencil') . '</a>
-                                    <a class="btn btn-sm btn-danger" href="?action=drop&id=' . $image['id'] . '">' . icon('trash') . '</a>
+                                    <a class="btn btn-sm btn-danger confirmDelete" href="?action=drop&id=' . $image['id'] . '">' . icon('trash') . '</a>
                                     ' . $addCamera . '
                                 </div>
                                 ' . $modal . '

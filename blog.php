@@ -3,24 +3,24 @@
 require 'includes/master.inc.php';
 require 'includes/user.inc.php';
 
-// The person needs to be logged in or an admin in order to delete the post
-if ($Auth->loggedIn())
-{
-    if (Blog::check_remove($Auth->id, $Auth->isAdmin()))
-    {
-	   redirect('blog.php');
-    }
-
-    // Check if a blog comment was added
-    Blog::comments_add($Auth->id);
-    Blog::comments_edit($Auth->id);
-    Blog::comments_delete($Auth->id);
-}
-
 $inputValue     = array('desc'=>'', 'text'=>'', '', '', '', '', '', '', '');
 $errorClass     = array('desc'=>'', 'text'=>'', '', '', '', '', '', '', '');
-$title          ="Blog <small>sharing my thoughts</small>";
+$title          = "Blog <small>sharing my thoughts</small>";
+$html           = "";
 
+# Fire up the blog class
+$Blog           = new Blog();
+
+
+# We need a quick way to extract the controlling information
+$action         = (isset($_REQUEST['action']))  ? $_REQUEST['action']       : false;
+$blog           = (isset($_REQUEST['blog']))    ? $_REQUEST['blog']         : false;
+$id             = (isset($_REQUEST['id']))      ? $_REQUEST['id']           : false;
+$article        = (isset($_REQUEST['article'])) ? $_REQUEST['article']      : $id;
+$search         = (isset($_REQUEST['search']))  ? $_REQUEST['search']       : false;
+$comment        = (isset($_REQUEST['comment'])) ? $_REQUEST['comment']      : false;
+
+# Fire up the JS and CSS portions
 $JS->add('prettify.js');
 $JS->output('blog.js');
 $JS->export();
@@ -29,69 +29,87 @@ $CSS->add('blog.css');
 $CSS->output('blog.css');
 $CSS->export();
 
-# Ensure we are an admin before hooking into the FB API
-if ($Auth->loggedIn() AND $Auth->isAdmin())
+
+# Switch through the actions as needed
+switch ($action)
 {
-    # Hoop into the FB api
-    require("API/facebook.php");
+    case "remove":
+        if ($Auth->loggedIn())
+        {
+            $delete = $Blog->check_remove($blog);
+            if ($delete)
+            {
+                $Error->add('info', "Successfully deleted blog");
+            }
+            else
+            {
+                $Error->add('error', "Could not delete blog");
+            }
+        }
+        redirect(full_url_to_script('blog.php'));
+        break;
+
+    case "deleteComment":
+        if ($Auth->loggedIn())
+        {
+            $delete = $Blog->deleteComment($id);
+            if ($delete)
+            {
+                $Error->add('info', "Successfully deleted comment");
+            }
+            else
+            {
+                $Error->add('error', "Could not delete comment");
+            }
+        }
+        redirect(full_url_to_script('blog.php'));
+        break;
+
+
+    case "editComment":
+        if ($Auth->loggedIn())
+        {
+            $edit = $Blog->editComment($id, $comment);
+            if ($edit)
+            {
+                $Error->add('info', "Successfully edited comment");
+            }
+            else
+            {
+                $Error->add('error', "Could not edit comment");
+            }
+        }
+        redirect(full_url_to_script('blog.php'));
+        break;
+
+
+    case "addComment":
+        if ($Auth->loggedIn())
+        {
+            $add = $Blog->addComment($id, $comment);
+            if ($add)
+            {
+                $Error->add('info', "Successfully add comment");
+            }
+            else
+            {
+                $Error->add('error', "Could not add comment");
+            }
+        }
+        redirect(full_url_to_script('blog.php'));
+        break;
+
+
+    default:
+        $html .= $Blog->defaultView($article);
+        break;
 }
 
-// Variables
-$blogList       = array();
-$page           = (isset($_GET['page'])) ? $_GET['page'] : 1;
-$search         = ((isset($_GET['search'])) && ($_GET['search'] !== '')) ? " WHERE `desc` LIKE '%" . $_GET['search'] . "%' or `body` LINK '%" . $_GET['search'] . "%'" : '';
-$searchValue    = ((isset($_GET['search'])) && ($_GET['search'] !== '')) ? $_GET['search'] : '';
-$searchAppend   = "&search=" . $searchValue;
-
-// Instantiate the pager
-$Pager=new DBPager('Blog', 'SELECT COUNT(id) FROM blog' . $search, 'SELECT * FROM blog' . $search, $page, 10, 100);
-
-// Build the paging
-$paging         = '<ul class="pagination">'. nl();
-$padding        = 3;
-
-for($i=1; $i<=$Pager->numPages; $i++)
-{
-    $min = $Pager->page - $padding;
-    $max = $Pager->page + $padding;
-
-    if ($i == 1)
-    {
-        $paging .= '<li><a href="?page=' . $i . $searchAppend .'">&laquo;</a></li>'. nl();
-    }
-
-    if ($i == $Pager->page)
-    {
-        $paging .= '<li class="active"><a href="#">' . $i . '</a></li>'. nl();
-    }
-
-    elseif (($i >= $max) xor ($i > $min))
-    {
-        $paging .= '<li><a href="?page=' . $i . $searchAppend . '">' . $i . '</a></li>'. nl();
-    }
-
-    if ($i == $Pager->numPages)
-    {
-        $paging .= '<li><a href="?page=' . $Pager->numPages . $searchAppend . '">&raquo;</a></li>'. nl();
-    }
-}
-$paging .='</ul>'. nl();
-// Build the paging
-
-// Build the user list array and pass it into the template
-$Blogs = DBObject::glob('Blog', 'SELECT * FROM blog ' . $search . ' ORDER By timestamp DESC' . $Pager->limits);
-foreach($Blogs as $blog)
-{
-    $blogList[$blog->id]['desc']        = $blog->desc;
-    $blogList[$blog->id]['body']        = $blog->body;
-    $blogList[$blog->id]['timestamp']   = $blog->timestamp;
-    $blogList[$blog->id]['user_id']     = $blog->user_id;
-}
 
 Template::setBaseDir('./assets/tmpl');
 $html = Template::loadTemplate('layout', array(
 	'header'=>Template::loadTemplate('header', array('title'=>$title,'user'=>$user,'admin'=>$isadmin,'msg'=>$msg, 'selected'=>'blog', 'Auth'=>$Auth, "CSS"=>$CSS->output())),
-	'content'=>Template::loadTemplate('blog', array('errorClass'=>$errorClass, 'inputValue'=>$inputValue, 'Auth'=>$Auth, 'admin'=>$isadmin, 'Pager'=>$paging, 'blogs'=>$blogList)),
+	'content'=>$html,
 	'footer'=>Template::loadTemplate('footer',array('time_start'=>$time_start, 'javascript'=>$JS->output()))
 ));
 
