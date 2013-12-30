@@ -249,7 +249,7 @@
                         if ($ACCESS)
                         {
                             $adminClass = "class='editDiv'";
-                            $deleteLink = " <a class='btn btn-default btn-xs btn-danger pull-right'  href='?action=deleteComment&id=" . $cid . "'>Delete</a>";
+                            $deleteLink = " <a class='btn btn-default btn-xs btn-danger pull-right'  href='blog.php?action=deleteComment&id=" . $cid . "'>Delete</a>";
                         }
 
                         $poster = ($this->Auth->id == $comment['user_id']) ? "You" : $comment['username'];
@@ -332,7 +332,7 @@
 
                 if ($i == 1)
                 {
-                    $paging .= '<li><a href="?page=' . $i . $searchAppend .'">&laquo;</a></li>'. nl();
+                    $paging .= '<li><a href="blog.php?page=' . $i . $searchAppend .'">&laquo;</a></li>'. nl();
                 }
 
                 if ($i == $this->page)
@@ -342,12 +342,12 @@
 
                 elseif (($i >= $max) xor ($i > $min))
                 {
-                    $paging .= '<li><a href="?page=' . $i . $searchAppend . '">' . $i . '</a></li>'. nl();
+                    $paging .= '<li><a href="blog.php?page=' . $i . $searchAppend . '">' . $i . '</a></li>'. nl();
                 }
 
                 if ($i == $numPages)
                 {
-                    $paging .= '<li><a href="?page=' . $numPages . $searchAppend . '">&raquo;</a></li>'. nl();
+                    $paging .= '<li><a href="blog.php?page=' . $numPages . $searchAppend . '">&raquo;</a></li>'. nl();
                 }
             }
             $paging .='</ul></div>'. nl();

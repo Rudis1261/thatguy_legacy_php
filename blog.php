@@ -6,7 +6,7 @@ require 'includes/user.inc.php';
 $inputValue     = array('desc'=>'', 'text'=>'', '', '', '', '', '', '', '');
 $errorClass     = array('desc'=>'', 'text'=>'', '', '', '', '', '', '', '');
 $title          = "Blog <small>sharing my thoughts</small>";
-$html           = "";
+$body           = "";
 
 # Fire up the blog class
 $Blog           = new Blog();
@@ -101,7 +101,7 @@ switch ($action)
 
 
     default:
-        $html .= $Blog->defaultView($article);
+        $body .= $Blog->defaultView($article);
         break;
 }
 
@@ -109,7 +109,7 @@ switch ($action)
 Template::setBaseDir('./assets/tmpl');
 $html = Template::loadTemplate('layout', array(
 	'header'=>Template::loadTemplate('header', array('title'=>$title,'user'=>$user,'admin'=>$isadmin,'msg'=>$msg, 'selected'=>'blog', 'Auth'=>$Auth, "CSS"=>$CSS->output())),
-	'content'=>$html,
+	'content'=>$body,
 	'footer'=>Template::loadTemplate('footer',array('time_start'=>$time_start, 'javascript'=>$JS->output()))
 ));
 
