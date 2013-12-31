@@ -100,38 +100,39 @@ class Merge
     }
 
 
+
     # I would like to minify the CSS and JS a bit more
     public function miniFy($content)
     {
-        // $find       = array("\r", "\t");
-        // $replace    = array("\n", "");
-        // $content    = str_replace($find, $replace, $content);
-        // $lines      = explode("\n", $content);
-        // $newContent = array();
+        $find       = array("\r", "\t");
+        $replace    = array("\n", "");
+        $content    = str_replace($find, $replace, $content);
+        $lines      = explode("\n", $content);
+        $newContent = array();
 
-        // foreach($lines as $lid=>$line)
-        // {
-        //     $line = trim($line);
+        foreach($lines as $lid=>$line)
+        {
+            $line = trim($line);
 
-        //     # Remove lines with // Comments
-        //     if (substr($line, 0, 2) == "//")
-        //     {
-        //         continue;
-        //     }
+            # Remove lines with // Comments
+            if (substr($line, 0, 2) == "//")
+            {
+                continue;
+            }
 
-        //     # Remove lines with /* */ Comments
-        //     if ((substr($line, 0, 2) == "/*") AND (substr($line, (strlen($line) - 2)) == "*/"))
-        //     {
-        //         continue;
-        //     }
+            # Remove lines with /* */ Comments
+            if ((substr($line, 0, 2) == "/*") AND (substr($line, (strlen($line) - 2)) == "*/"))
+            {
+                continue;
+            }
 
-        //     if (!empty($line))
-        //     {
-        //         $newContent[] = $line;
-        //     }
-        // }
+            if (!empty($line))
+            {
+                $newContent[] = $line;
+            }
+        }
 
-        // $content = implode("\n", $newContent);
+        $content = implode("\n", $newContent);
         return $content;
     }
 

@@ -22,11 +22,8 @@ $comment        = (isset($_REQUEST['comment'])) ? $_REQUEST['comment']      : fa
 
 # Fire up the JS and CSS portions
 $JS->output('blog.js');
-$JS->add('prettify.js');
-$JS->add('run_prettify.js');
 $JS->export();
 
-$CSS->add('prettify.css');
 $CSS->add('blog.css');
 $CSS->output('blog.css');
 $CSS->export();

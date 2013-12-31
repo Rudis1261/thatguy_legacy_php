@@ -17,7 +17,7 @@ if(!defined('SPF'))
 		echo $javascript . "?t=" .  Cache::modified($javascript);
 	} else {
 		require DOC_ROOT . '/includes/javascript.inc.php';
-		$JS->output('default.js');
+		$JS->output('javascript.js');
 		$JS->export();
 		echo $JS->output() . "?t=" .  Cache::modified($JS->output());
 	}

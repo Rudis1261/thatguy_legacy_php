@@ -37,7 +37,6 @@ if ( ($Auth->loggedIn()) && $Auth->isAdmin() )
 
 ?>
 	<hr />
-	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 	<footer>
 		<center>
 
@@ -87,7 +86,7 @@ if ( ($Auth->loggedIn()) && $Auth->isAdmin() )
 	else
 	{
 		require DOC_ROOT . '/includes/javascript.inc.php';
-		$JS->output('default.js');
+		$JS->output('javascript.js');
 		$JS->export();
 		echo $JS->output() . "?t=" .  Cache::modified($JS->output());
 	}
