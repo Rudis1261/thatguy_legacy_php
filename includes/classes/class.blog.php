@@ -103,8 +103,8 @@
             }
 
             # Get the page of blogs
-            $chunks = array_chunk($this->blogs, $this->perPage, true);
-            $blogs  = $chunks[$this->page-1];
+            $chunks = (!empty($this->blogs))    ? array_chunk($this->blogs, $this->perPage, true)   : array();
+            $blogs  = (!empty($chunks))         ? $chunks[$this->page-1]                            : array();
             $c      = 0;
 
             # Loop through the blogs and start creating the output
@@ -311,8 +311,8 @@
                 $c++;
             }
             return $out;
-
         }
+
 
         # I would like a generic pager, thank you
         public function pager($searchAppend="", $padding=3)
@@ -432,6 +432,7 @@
             return false;
         }
 
+
         // Check if the blog is set to be removed and also confirm whether the user has adequate rights to do so
         public  function check_remove($id, $admin=false)
         {
@@ -453,6 +454,7 @@
             return false;
         }
 
+
         // Get the user's id for a specific blog, this is needed when deleting a blog
         public static function user($id)
         {
@@ -463,6 +465,7 @@
             }
             return false;
         }
+
 
         // Get all the data from the blogs
         public static function get($id)
@@ -481,6 +484,7 @@
             return false;
         }
 
+
         // Check if the Blog exists, if it does then return the id
         public function descToId($desc)
         {
@@ -492,6 +496,7 @@
             }
             return false;
         }
+
 
         // Get an array from the upload
         public static function uploads_get($blog_id)
@@ -505,6 +510,7 @@
                 return array();
             }
         }
+
 
         // Insert image into a blog
         public function uploads_add($user_id, $blog_id, $image)
@@ -520,6 +526,7 @@
             }
             return false;
         }
+
 
         // Delete an image from the blog
         public function uploads_delete($image)
@@ -538,6 +545,7 @@
             return false;
         }
 
+
         // Delete all images for a particular blog
         public function uploads_purge($blog_id)
         {
@@ -554,6 +562,7 @@
                 $this->uploads_delete($upload);
             }
         }
+
 
         // Display all comments for a blog
         public static function comments_get($blog_id)
@@ -574,6 +583,7 @@
             }
             return $comments;
         }
+
 
         // Insert image into a blog
         public function addComment($id, $comment)
@@ -635,6 +645,7 @@
             }
             return false;
         }
+
 
         // Delete all images for a particular blog
         public static function comments_purge($blog_id)

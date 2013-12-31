@@ -6,10 +6,12 @@ require 'includes/master.inc.php';
 require 'includes/user.inc.php';
 
 # Fire up the JS and CSS portions
-$JS->add('prettify.js');
 $JS->output('blog.js');
+$JS->add('prettify.js');
+$JS->add('run_prettify.js');
 $JS->export();
 
+$CSS->add('prettify.css');
 $CSS->add('blog.css');
 $CSS->output('blog.css');
 $CSS->export();
@@ -21,10 +23,10 @@ $action         = (isset($_REQUEST['action']))      ? $_REQUEST['action']       
 $type           = (isset($_REQUEST['type']))        ? $_REQUEST['type']         : false;
 
 # We need a quick way to extract the controlling information
-$blog           = (isset($_REQUEST['blog']))    ? $_REQUEST['blog']         : false;
-$article        = (isset($_REQUEST['article'])) ? $_REQUEST['article']      : $id;
-$search         = (isset($_REQUEST['search']))  ? $_REQUEST['search']       : false;
-$comment        = (isset($_REQUEST['comment'])) ? $_REQUEST['comment']      : false;
+$blog           = (isset($_REQUEST['blog']))        ? $_REQUEST['blog']         : false;
+$article        = (isset($_REQUEST['article']))     ? $_REQUEST['article']      : $id;
+$search         = (isset($_REQUEST['search']))      ? $_REQUEST['search']       : false;
+$comment        = (isset($_REQUEST['comment']))     ? $_REQUEST['comment']      : false;
 
 # Start the output
 $title  = '';

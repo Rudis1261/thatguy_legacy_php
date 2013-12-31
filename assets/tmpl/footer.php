@@ -37,24 +37,25 @@ if ( ($Auth->loggedIn()) && $Auth->isAdmin() )
 
 ?>
 	<hr />
+	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 	<footer>
 		<center>
 
 			<!-- Place this code where you want the badge to render. -->
 			<a href="//plus.google.com/109627982720737965997?prsrc=3" rel="publisher" target="_top" style="text-decoration:none;">
-				<img src="//ssl.gstatic.com/images/icons/gplus-32.png" alt="Google+" style="border:0;width:32px;height:32px;"/>
+				<img src="assets/img/blank.gif" class="googlePlus" alt="Google+" style="border:0;width:32px;height:32px;"/>
 			</a>
 
 			<a href="https://www.facebook.com/thatguy.co.za" target="_BLANK" style="text-decoration:none;">
-				<img src="assets/img/facebook.jpg" alt="Facebook" style="border:0;width:36px;height:36px;"/>
+				<img src="assets/img/blank.gif" class="facebook" alt="Facebook" style="border:0;width:32px;height:32px;"/>
 			</a>
 
 			<a href="http://www.flickr.com/photos/thatguycoza/" target="_BLANK" style="text-decoration:none;">
-				<img src="assets/img/flickr.jpg" alt="Flickr" style="border:0;width:36px;height:36px;"/>
+				<img src="assets/img/blank.gif" class="flickr" alt="Flickr" style="border:0;width:40px;height:32px;"/>
 			</a>
 
 			<a href="http://rudis1261.deviantart.com/" target="_BLANK" style="text-decoration:none;">
-				<img src="assets/img/da.jpg" alt="DeviantArt" style="border:0;width:36px;height:36px;"/>
+				<img src="assets/img/blank.gif" class="da" alt="DeviantArt" style="border:0;width:32px;height:32px;"/>
 			</a>
 
 		</center>

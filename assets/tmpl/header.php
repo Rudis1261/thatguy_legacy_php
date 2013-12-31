@@ -86,9 +86,9 @@ function displayMenu($menuList)
     <meta property="og:image" content="<?php      if (isset($fb['image']))      { echo $fb['image'];      } else {  echo Options::get('facebookImage'); } ?>" />
     <meta property="og:site_name" content="<?php  if (isset($fb['site_name']))  { echo $fb['site_name'];  } else {  echo Options::get('facebookSiteName'); } ?>" />
     <meta property="fb:admins" content="<?php     if (isset($fb['admins']))     { echo $fb['admins'];     } else {  echo Options::get('facebookAdminUsers'); } ?>" />
+
     <!-- possible additional metadata -->
     <?php if (isset($meta)) { echo $meta; } ?>
-
     <!-- Le styles -->
     <link rel="stylesheet" href="<?php
     	if (isset($CSS))
@@ -104,7 +104,7 @@ function displayMenu($menuList)
     		echo $CSS->output() . "?t=" .  Cache::modified($CSS->output());
     	}
     ?>">
-    <link rel="stylesheet" href="assets/css/responsive.custom.css">
+    <!--<link rel="stylesheet" href="assets/css/responsive.custom.css">-->
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -114,7 +114,7 @@ function displayMenu($menuList)
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="assets/img/iconv2.png">
   </head>
-  <body onload="prettyPrint()">
+  <body>
 
     <div id="wrapper">
       <!-- Sidebar -->

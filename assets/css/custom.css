@@ -21,14 +21,55 @@
 }
 
 
+@font-face {
+  font-family: 'Exo 2';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Exo 2'), local('Exo2-Regular'), url(../../fonts/exo2.woff) format('woff');
+}
+
+img.facebook {
+
+  width:  32px;
+  height: 32px;
+  background:url(../../img/services.jpg) 0 0;
+
+}
+
+
+img.da {
+
+  width:  32px;
+  height: 32px;
+  background:url(../../img/services.jpg) -125px 0;
+
+}
+
+
+img.googlePlus {
+
+  width:  32px;
+  height: 32px;
+  background:url(../../img/services.jpg) -39px 0;
+
+}
+
+img.flickr {
+
+  width:  40px;
+  height: 32px;
+  background:url(../../img/services.jpg) -79px 0;
+
+}
+
+
 body {
 
   padding-top: 0px;
   background: white;
-  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-family: 'Exo 2', "Trebuchet MS", Helvetica, sans-serif;
   padding-bottom: 40px;
 }
-
 
 #wrapper {
   padding-left: 220px;

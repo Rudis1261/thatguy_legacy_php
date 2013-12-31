@@ -54,7 +54,7 @@ if ($action)
 
     else
     {
-    	$inputValue['desc'] = strip_tags($_POST['desc']);
+    	$inputValue['desc'] = $_POST['desc'];
     	$editBlog += 1;
     }
 
@@ -68,7 +68,7 @@ if ($action)
 
     else
     {
-    	$inputValue['text'] = strip_tags($_POST['text']);
+    	$inputValue['text'] = $_POST['text'];
     	$editBlog += 1;
     }
 
@@ -76,8 +76,8 @@ if ($action)
     // All checking done, create it
     if (($editBlog == 2) AND ($Error->ok()==false))
     {
-        $DESCRIPTION    = strip_tags($_POST['desc']);
-        $BODY           = strip_tags($_POST['text']);
+        $DESCRIPTION    = $_POST['desc'];
+        $BODY           = $_POST['text'];
 
         if ($id)
         {
@@ -159,7 +159,7 @@ if ($action)
                 $string     = BBCode::mailify($string);
                 $string     = BBCode::decode($string);
                 $string     = BBCode::linkify($string);
-                $string     = strip_tags($string);
+                $string     = htmlspecialchars($string);
                 $blogUrl    = full_url_to_script('blog.php') . "?article=" . rawurlencode($DESCRIPTION) . "#" . rawurlencode($DESCRIPTION);
 
                 # Hook into FACEBOOK

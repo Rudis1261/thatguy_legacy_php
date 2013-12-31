@@ -1,47 +1,47 @@
 <?PHP
     class BBCode
     {
-
         public static function decode($string_in)
         {
-                $search = array(
-                    '#\[color=(.*?)\](.*?)\[/color\]#ism',
-                    '#\[h1\](.*?)\[/h1\]#is',
-                    '#\[h2\](.*?)\[/h2\]#is',
-                    '#\[b\](.*?)\[/b\]#ism',
-                    '#\[i\](.*?)\[/i\]#ism',
-                    '#\[u\](.*?)\[/u\]#ism',
-                    '#\*\*\*(.*?)\\n#is',
-                    '#===(.*?)\\n#is',
-                    '#---(.*?)\\n#is',
-                    '#\[btn=(.*?)\](.*?)\[/btn\]#is',
-                    '#\[url=(.*?)\](.*?)\[/url\]#ism',
+            $search = array(
+                '#\[color=(.*?)\](.*?)\[/color\]#ism',
+                '#\[h1\](.*?)\[/h1\]#is',
+                '#\[h2\](.*?)\[/h2\]#is',
+                '#\[b\](.*?)\[/b\]#ism',
+                '#\[i\](.*?)\[/i\]#ism',
+                '#\[u\](.*?)\[/u\]#ism',
+                '#\*\*\*(.*?)\\n#is',
+                '#===(.*?)\\n#is',
+                '#---(.*?)\\n#is',
+                '#\[btn=(.*?)\](.*?)\[/btn\]#is',
+                '#\[url=(.*?)\](.*?)\[/url\]#ism',
 
-                );
+            );
 
-                $replace = array(
-                    '<font color="\\1">\\2</font>',
-                    '<h3 style="color: black;">\\1</h3>',
-                    '<h4 style="color: black;">\\1</h4>',
-                    '<b>\\1</b>',
-                    '<i>\\1</i>',
-                    '<u>\\1</u>',
-                    '<li class="span">\\1</li><div class="clearfix"></div>',
-                    '<h3 style="color: black;">\\1</h3>',
-                    '<h4 style="color: black;">\\1</h4>',
-                    '<a style="margin-right: 15px;" class="btn btn-default btn-lg" target="_blank" href="\\1">\\2</a>',
-                    '<a target="_blank" href="\\1">\\2</a>',
-                );
-
-                return preg_replace($search, $replace, $string_in);
+            $replace = array(
+                '<font color="\\1">\\2</font>',
+                '<h3 style="color: black;">\\1</h3>',
+                '<h4 style="color: black;">\\1</h4>',
+                '<b>\\1</b>',
+                '<i>\\1</i>',
+                '<u>\\1</u>',
+                '<li class="span">\\1</li><div class="clearfix"></div>',
+                '<h3 style="color: black;">\\1</h3>',
+                '<h4 style="color: black;">\\1</h4>',
+                '<a style="margin-right: 15px;" class="btn btn-default btn-lg" target="_blank" href="\\1">\\2</a>',
+                '<a target="_blank" href="\\1">\\2</a>',
+            );
+            return preg_replace($search, $replace, $string_in);
         }
+
 
         // Custom codify function to convert [code]*[/code] to a awesome looking highlighter
         public static function codify($string)
         {
-            $new = '<pre class="prettyprint linenums">';
+            $new = '<pre class="prettyprint ">';
             $search = "#\[code\](.*?)\[/code\]#s";
             $reg = preg_match($search, $string, $out);
+
             if (count($out) > 0)
             {
                 $out = explode("\n", $out[0]);
@@ -54,10 +54,10 @@
                 }
                 $new .= "</pre>";
                 return preg_replace($search, $new, $string);
-            } else {
-                return $string;
             }
+            return $string;
         }
+
 
         // Lets do the file one
         public static function filify($string)
@@ -66,8 +66,7 @@
             $reg = preg_match_all($search, $string, $out);
 
             // We need to ensure that this loop only runs when a file is actually found within the string.
-            if ( (isset($out[1]))
-            && (count($out[1]) > 0) )
+            if ( (isset($out[1])) AND (count($out[1]) > 0) )
             {
                 foreach($out[1] as $key=>$file)
                 {
@@ -85,11 +84,13 @@
             return $string;
         }
 
+
         // Custom Imagify function.
         public static function imagic($string)
         {
             $search = '#\[img\](.*?)\[/img\]#ism';
             $reg = preg_match_all($search, $string, $out);
+
             if (count($out) > 0)
             {
                 $original = $out[0];
@@ -125,11 +126,14 @@
             }
             return $string;
         }
+
+
         // Custom Imagify function.
         public static function imagicPlain($string)
         {
             $search = '#\[img\](.*?)\[/img\]#ism';
             $reg = preg_match_all($search, $string, $out);
+
             if (count($out) > 0)
             {
                 $original = $out[0];
@@ -144,14 +148,19 @@
                     if (file_exists(str_replace($path, $largePath, $image)))
                     {
                         $replace = '<img width="50" alt="Image missing ' . $image . '" src="' . $image . '" />';
-                    } else { // No it's on someone else's server
+                    }
+                    else
+                    {
+                        // No it's on someone else's server
                         $replace = '<img width="50" alt="Image missing ' . $image . '" src="' . $image . '" />';
                     }
                     $string = str_replace($original[$key], $replace, $string);
                 }
             }
+
             return $string;
         }
+
 
         // Custom Imagify function.
         public static function imagicFB($string)
@@ -159,6 +168,7 @@
             $return = array('string'=>$string, 'images'=>array());
             $search = '#\[img\](.*?)\[/img\]#ism';
             $reg = preg_match_all($search, $string, $out);
+
             if (count($out) > 0)
             {
                 $original = $out[0];
@@ -171,6 +181,7 @@
             }
             return $return;
         }
+
 
         // Similar to imagic, but to check if there is a large version locally and return a link for it
         public static function imageFullSize($image, $dir='portfolio')
@@ -186,6 +197,7 @@
             }
             return $image;
         }
+
 
         // This function will return an array of all the available BBCode.
         public static function showAll()
@@ -207,14 +219,16 @@
             return $bbcode;
         }
 
+
         // This is not really BBCode, but lets keep it here
         public static function mailify($text)
         {
-          $regex = '/(\S+@\S+\.\S+)/i';
-          $replace = "<a href='mailto:$1'>$1</a>";
-          $result = preg_replace($regex, $replace, $text);
-          return $result;
+            $regex = '/(\S+@\S+\.\S+)/i';
+            $replace = "<a href='mailto:$1'>$1</a>";
+            $result = preg_replace($regex, $replace, $text);
+            return $result;
         }
+
 
         // This function will automatically create twitter links
         public static function twitter($text)
@@ -223,6 +237,7 @@
             $text= preg_replace("/\#(\w+)/", '<a href="http://search.twitter.com/search?q=$1" target="_blank">#$1</a>',$text);
             return $text;
         }
+
 
         // Automatically create links
         public static function linkify($text)
@@ -233,18 +248,18 @@
             return($text);
         }
 
+
         // This is a templatized bbcode version
         public static function allInOne($text)
         {
             //$text = htmlentities($text);
-	    $text = nl2br($text);
-	    $text = BBCode::imagic($text);
-	    $text = BBCode::codify($text);
-	    $text = BBCode::mailify($text);
-	    $text = BBCode::decode($text);
-	    $text = BBCode::linkify($text);
-	    $text = BBCode::filify($text);
-
+    	    $text = nl2br($text);
+    	    $text = BBCode::imagic($text);
+    	    $text = BBCode::codify($text);
+    	    $text = BBCode::mailify($text);
+    	    $text = BBCode::decode($text);
+    	    $text = BBCode::linkify($text);
+    	    $text = BBCode::filify($text);
             return $text;
         }
 

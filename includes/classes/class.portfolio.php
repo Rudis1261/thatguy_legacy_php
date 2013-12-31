@@ -573,7 +573,7 @@
                     $output .= '<div align="left" class="pull-left">
                                     <label>
                                         <input value="' . time() . '" name="' . $type . '" type="checkbox">
-                                        <img  width="35" height="35" src="assets/img/' . $type . '.jpg" alt="' . $type . '"/>
+                                        <img class="' . $type . '" src="assets/img/blank.gif" alt="' . $type . '"/>
                                         &nbsp;&nbsp;&nbsp;
                                     </label>
                                 </div>';
