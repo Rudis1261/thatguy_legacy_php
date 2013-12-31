@@ -4,7 +4,6 @@ require 'includes/master.inc.php';
 $mustauth=true;
 require 'includes/user.inc.php';
 
-$JS->add('prettify.js');
 $JS->output('blog.js');
 $JS->export();
 
