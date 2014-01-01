@@ -35,7 +35,12 @@ $action = ($id) ? "Save Changes" : "Create new blog";
 			</div>
 		<textarea name="text" tabindex="2" id="text" rows="20" id="input01" class="form-control input-sm" placeholder="Well hello there"><?php echo $inputValue['text']; ?></textarea>
 	</div>
-
+	<div class="checkbox">
+		<label>
+			<input type="checkbox" name="facebook" value="publish" checked>
+			<img src="assets/img/blank.gif" class="facebook" />
+		</label>
+	</div>
 
 	<?php
 		if ((isset($uploads))
@@ -66,13 +71,11 @@ $action = ($id) ? "Save Changes" : "Create new blog";
 	?>
 
 	<div class="form-group">
-		<label class="control-label">Upload images</label>
-		<input type="file" multiple name="upload[]" id="blog_upload" />
-	</div>
-
-	<div class="form-group">
 		<div class="controls col-lg-6" id="showImages"> </div>
 	</div>
 	<div class="clearfix"></div>
-	<input type="submit" name="action" class="btn btn-default btn-lg btn-primary" value="<?php echo $action; ?>">
+	<div class="input-group">
+		<input type="file" icon="picture" title="Attach Images" name="upload[]" class="btn-success btn-lg" multiple>
+		<button type="submit" name="action" class="btn btn-default btn-lg"><?php echo $action . " " . icon('bookmark'); ?></button>
+	</div>
 </form>

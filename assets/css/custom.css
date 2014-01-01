@@ -62,7 +62,6 @@ img.flickr {
 
 }
 
-
 body {
 
   padding-top: 0px;
@@ -238,5 +237,14 @@ body {
 
   .inset {
     padding: 0px;
+  }
+
+  h2.logo {
+    font-size: 26px;
+  }
+
+  img.logo {
+    width: 70px;
+    height: 75px;
   }
 }

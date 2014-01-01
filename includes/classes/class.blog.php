@@ -118,7 +118,7 @@
                 $ACCESS         = (($ADMIN) OR ($this->Auth->id == $blog['user_id']));
 
                 # Create he odd / even row styling
-                if ($c %2 == 0)
+                if ($c %2 == 1)
                 {
                     $style .= "background: #f7fafb;";
                 }

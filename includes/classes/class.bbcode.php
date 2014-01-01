@@ -202,16 +202,16 @@
         // This function will return an array of all the available BBCode.
         public static function showAll()
         {
-            $bbcode = array('Large Heading'         =>array('icon'=>'glyphicon glyphicon-font',         'code'=>'[h1][/h1]',                                'pre'=>'[h1]',      'post'=>'[/h1]'),
-                            'Medium Heading'        =>array('icon'=>'glyphicon glyphicon-font',         'code'=>'[h2][/h2]',                                'pre'=>'[h2]',      'post'=>'[/h2]'),
+            $bbcode = array('Large Heading'         =>array('icon'=>'glyphicon glyphicon-header',       'code'=>'[h1][/h1]',                                'pre'=>'[h1]',      'post'=>'[/h1]'),
+                            'Medium Heading'        =>array('icon'=>'glyphicon glyphicon-header',       'code'=>'[h2][/h2]',                                'pre'=>'[h2]',      'post'=>'[/h2]'),
                             'Bold'                  =>array('icon'=>'glyphicon glyphicon-bold',         'code'=>'[b][/b]',                                  'pre'=>'[b]',       'post'=>'[/b]'),
                             'Italics'               =>array('icon'=>'glyphicon glyphicon-italic',       'code'=>'[i][/i]',                                  'pre'=>'[i]',       'post'=>'[/i]'),
                             'Underline'             =>array('icon'=>'glyphicon glyphicon-text-width',   'code'=>'[u][/u]',                                  'pre'=>'[u]',       'post'=>'[/u]'),
                             'Bullet Point'          =>array('icon'=>'glyphicon glyphicon-asterisk',     'code'=>'*** Bullet me baby',                       'pre'=>'***',       'post'=>''),
                             'Image'                 =>array('icon'=>'glyphicon glyphicon-picture',      'code'=>'[img][/img]',                              'pre'=>'[img]',     'post'=>'[/img]'),
-                            'Link'                  =>array('icon'=>'glyphicon glyphicon-globe',        'code'=>'[url=http://link.com]Link Name[/url]',     'pre'=>'[url=',     'post'=>']Link Name[/url]'),
+                            'Link'                  =>array('icon'=>'glyphicon glyphicon-link',         'code'=>'[url=http://link.com]Link Name[/url]',     'pre'=>'[url=',     'post'=>']Link Name[/url]'),
                             'Button Link'           =>array('icon'=>'glyphicon glyphicon-bookmark',     'code'=>'[btn=http://link.com]Link Name[/btn]',     'pre'=>'[btn=',     'post'=>']Link Name[/btn]'),
-                            'Code'                  =>array('icon'=>'glyphicon glyphicon-list',         'code'=>'[code][/code]',                            'pre'=>'[code]',    'post'=>'[/code]'),
+                            'Code'                  =>array('icon'=>'glyphicon glyphicon-barcode',      'code'=>'[code][/code]',                            'pre'=>'[code]',    'post'=>'[/code]'),
                             'File'                  =>array('icon'=>'glyphicon glyphicon-file',         'code'=>'[file][/file]',                            'pre'=>'[file]',    'post'=>'[/file]'),
                             'Color'                 =>array('icon'=>'glyphicon glyphicon-tint',         'code'=>'[color=red][/color]',                      'pre'=>'[color=red]','post'=>'[/color]'),
                             'Horizontal Ruler'      =>array('icon'=>'glyphicon glyphicon-minus',        'code'=>'<hr />',                                   'pre'=>'',          'post'=>'<hr />'),

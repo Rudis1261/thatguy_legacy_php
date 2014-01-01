@@ -171,12 +171,12 @@ function displayMenu($menuList)
             </div>
             <div class="pull-right">
               <span class="pull-left">
-                <h2>
+                <h2 class="logo">
                   <b>ThatGuy&nbsp;&nbsp;&nbsp;</b>
                 </h2>
               </span>
               <span class="pull-left">
-                <img src='assets/img/logo_white.png' alt='logo' width='90' height='97' />
+                <img src='assets/img/logo_white.png' class="logo" alt='logo' width='90' height='97' />
               </span>
             </div>
         </div>

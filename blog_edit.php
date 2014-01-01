@@ -161,32 +161,37 @@ if ($action)
                 $string     = htmlspecialchars($string);
                 $blogUrl    = full_url_to_script('blog.php') . "?article=" . rawurlencode($DESCRIPTION) . "#" . rawurlencode($DESCRIPTION);
 
-                # Hook into FACEBOOK
-                require("API/facebook.php");
 
-                # Post to ThatGuy
-                $fbBlogPost = $facebook->api('/147906525337534/feed', 'POST',
-                    array(
-                        'link'          => $blogUrl,
-                        'name'          => $DESCRIPTION . ", " . dater(time(), 'd M Y'),
-                        'description'   => "See what I have been up to",
-                        'caption'       => "Open the blog",
-                        'message'       => $string,
-                        'access_token'  => $fbPageToken
-                    )
-                );
+                # Ensure that we are suppose to be publishing to facebook
+                if ((isset($_REQUEST['facebook'])) AND ($_REQUEST['facebook'] == "publish"))
+                {
+                    # Hook into FACEBOOK
+                    require("API/facebook.php");
 
-                # Post to my Facebook
-                $fbBlogPost = $facebook->api('/me/feed', 'POST',
-                    array(
-                         'link'          => "https://www.facebook.com/thatguy.co.za",
-                        'name'          => $DESCRIPTION . ", " . dater(time(), 'd M Y'),
-                        'description'   => "See what I have been up to",
-                        'caption'       => "Check out my page",
-                        'message'       => $string,
-                        'access_token'  => $fbUserToken
-                    )
-                );
+                    # Post to ThatGuy
+                    $fbBlogPost = $facebook->api('/147906525337534/feed', 'POST',
+                        array(
+                            'link'          => $blogUrl,
+                            'name'          => $DESCRIPTION . ", " . dater(time(), 'd M Y'),
+                            'description'   => "See what I have been up to",
+                            'caption'       => "Open the blog",
+                            'message'       => $string,
+                            'access_token'  => $fbPageToken
+                        )
+                    );
+
+                    # Post to my Facebook
+                    $fbBlogPost = $facebook->api('/me/feed', 'POST',
+                        array(
+                             'link'          => "https://www.facebook.com/thatguy.co.za",
+                            'name'          => $DESCRIPTION . ", " . dater(time(), 'd M Y'),
+                            'description'   => "See what I have been up to",
+                            'caption'       => "Check out my page",
+                            'message'       => $string,
+                            'access_token'  => $fbUserToken
+                        )
+                    );
+                }
             }
 
             # Check that the new images are not empty

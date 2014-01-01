@@ -731,8 +731,8 @@
             $out = '<form role="form" method="post" enctype="multipart/form-data">
                       <div class="form-group">
                         <div class="input-group">
-                            <button type="submit" class="btn btn-default addOn">Upload ' . icon("upload") . '</button>
-                            <input type="file" icon="picture" title="Select images" name="upload[]" class="btn-success" multiple>
+                            <input type="file" icon="picture" title="Select images" name="upload[]" class="btn-success btn-lg" multiple>
+                            <button type="submit" class="btn btn-default btn-lg addOn">Upload ' . icon("cloud") . '</button>
                         </div>
                       </div>
                     </form>';
