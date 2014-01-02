@@ -136,6 +136,7 @@ class Merge
         return $content;
     }
 
+
     public function export()
     {
         $size = $this->getSize();
@@ -169,7 +170,6 @@ class Merge
                 fclose($handle);
                 Cache::add($this->output(), $size);
                 return true;
-
             }
             return false;
         }
