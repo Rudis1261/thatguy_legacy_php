@@ -583,7 +583,7 @@
                 {
                     $output .= '<div align="left" class="pull-left">
                                     <label>
-                                        <img width="35" height="35" src="assets/img/' . $type . '.jpg" alt="' . $type . '"/>
+                                        <img class="' . $type . '" src="assets/img/blank.gif" alt="' . $type . '"/>
                                         &nbsp;&nbsp;&nbsp;
                                     </label>
                                 </div>';
@@ -1108,14 +1108,16 @@
             # Hook into the API's we need
             require("API/facebook.php");
 
-            $fbPageToken = Options::get('fbPageToken');
+            # Get the options
+            $fbPageToken    = Options::get('fbPageToken');
+            $fbSendName     = Options::get('fbSendName');
 
-            // add a status message
+            # Send IT
             $photo = $facebook->api('/147906525337534/photos', 'POST',
                 array(
-                    'image' => '@' . realpath($this->pathLarge . $image['image']),
-                    'message' => $image['name'],
-                    'access_token' => $fbPageToken,
+                    'image'             => '@' . realpath($this->pathLarge . $image['image']),
+                    'message'           => ($fbSendName !== false) ? $image['name'] : "",
+                    'access_token'      => $fbPageToken,
                 )
             );
         }

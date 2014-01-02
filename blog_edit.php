@@ -43,7 +43,7 @@ if ($action == "unlink")
 }
 
 // Create Blog
-if ($action)
+if ($action == "createBlog")
 {
     if ($_POST['desc'] == '')
     {
@@ -70,7 +70,6 @@ if ($action)
     	$inputValue['text'] = $_POST['text'];
     	$editBlog += 1;
     }
-
 
     // All checking done, create it
     if (($editBlog == 2) AND ($Error->ok()==false))

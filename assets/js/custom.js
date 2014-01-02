@@ -242,22 +242,4 @@ $(document).ready(function() {
 
 });
 
-
-// This function will set the scrolling so that when a page refreshes to the same screen that your offet is the same
-function page_scroller()
-{
-    var pageOffset = $(document).scrollTop();
-    set_cookie("scroll", pageOffset);
-}
-
-if (pageOffsetCookie != 'null')
-{
-    $(document).scrollTop(pageOffsetCookie);
-}
-
-$(window).scroll(function(event){
-    page_scroller()
-});
-
-
 /* GENERAL */

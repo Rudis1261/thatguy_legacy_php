@@ -43,11 +43,7 @@ Options::addOnce('siteLogo', 'assets/img/logo.png', 'input', 'Website Settings')
 Options::addOnce('siteIcon', 'assets/img/icon.png', 'input', 'Website Settings');
 Options::addOnce('homePageFrom', '2 weeks ago', 'input', 'Website Settings');
 Options::addOnce('prettyName', '<small>www.</small>ThatGuy<small>.co.za</small>', 'input', 'Website Settings');
-Options::remove('homePageTileHeight');//, '220', 'input', 'Website Settings');
-Options::remove('maxOverViewChars');//, '80', 'input', 'Website Settings');
 Options::addOnce('dateFormatFull', "d F Y H:i", 'input', 'Website Settings');
-Options::remove('tvTrackerComingSoon');//, '+6 days', 'input', 'Website Settings');
-Options::remove('tvTrackerComingLater');//, "+1 month", 'input', 'Website Settings');
 Options::addOnce('maxLoginAttempts', "7", 'input', 'Website Settings');
 Options::addOnce('loginRetyTime', "10", 'input', 'Website Settings');
 
@@ -69,16 +65,9 @@ Options::addOnce('facebookAdminUsers', '0000000', 'input', 'META Data');
 Options::addOnce('facebookTitle', 'FB Page title', 'input', 'META Data');
 
 // Portfolio
-Options::addOnce('collageImages', '9', 'input', 'Portfolio Settings');
-Options::addOnce('collageWidth', '500', 'input', 'Portfolio Settings');
-Options::addOnce('collageHeight', '350', 'input', 'Portfolio Settings');
-
-/*Options::addOnce('imageLargeWidth', '2560x1920', 'input', 'Portfolio Settings');
-Options::addOnce('imageMediumWidth', '960x600', 'input', 'Portfolio Settings');
-Options::addOnce('imageThumbWidth', '250x156', 'input', 'Portfolio Settings');*/
-Options::remove('imageLargeWidth');
-Options::remove('imageMediumWidth');
-Options::remove('imageThumbWidth');
+Options::remove('collageImages');//, '9', 'input', 'Portfolio Settings');
+Options::remove('collageWidth');//, '500', 'input', 'Portfolio Settings');
+Options::remove('collageHeight');//, '350', 'input', 'Portfolio Settings');
 
 
 // User Settings, visible in their Settings.php page. This will be in addition to their email and password
@@ -87,10 +76,6 @@ Options::addOnce('firstName', 'John', 'input', 'User Settings');
 Options::addOnce('surname', 'Doe', 'input', 'User Settings');
 Options::addOnce('dateOfBirth', '631144800', 'date', 'User Settings');
 Options::addOnce('googlePlusAccount', '', 'input', 'User Settings');
-Options::remove('TVTrackerHowManyDaysBack');
-Options::remove('TVTrackerHowManyDaysForward');
-Options::remove('TVTrackerEmail');
-Options::remove('TVTrackerToken');
 
 // This would be used by various Third Parties, Deviant ART, Flickr and Facebook
 Options::addOnce('flickrKey', '', 'input', 'API Settings');
@@ -99,26 +84,13 @@ Options::addOnce('flickrToken', '', 'input', 'API Settings');
 
 Options::addOnce('daEmailAddress', '', 'input', 'API Settings');
 Options::addOnce('daEmailFrom', '', 'input', 'API Settings');
-Options::addOnce('apiLive', true, 'bool', 'API Settings');
+Options::remove('apiLive');//, true, 'bool', 'API Settings');
 
 Options::addOnce('fbKey', '', 'input', 'API Settings');
 Options::addOnce('fbSecret', '', 'input', 'API Settings');
-Options::remove('fbToken');//, '', 'input', 'API Settings');
 Options::addOnce('fbUserToken', '', 'input', 'API Settings');
 Options::addOnce('fbPageToken', '', 'input', 'API Settings');
-
-Options::remove('tvDbApiKey');//, '', 'input', 'API Settings');
-Options::remove('tvDbLastUpdate');//, '', 'hidden', 'API Settings');
-
-Options::remove('tvUrlApi');//, 'http://kat.ph/usearch/{NAME} S{S}E{E}/?field=seeders&sorder=desc&rss=1', 'input', 'API Settings');
-Options::remove('tvUrlKat');//, 'http://kat.ph/usearch/{NAME} S{S}E{E}/?field=seeders&sorder=desc', 'input', 'API Settings');
-Options::remove('tvUrlPirate');//, 'http://thepiratebay.se/search/{NAME} S{S}E{E}', 'input', 'API Settings');
-Options::remove('tvUrlWarez');//, 'http://www.warez-bb.org/search.php?search_forum=57&search_fields=titleonly&search_terms=all&search_keywords={NAME} S{S}E{E}', 'input', 'API Settings');
-
-# We also need to be able to search based on the name for the Season 0 shows
-Options::remove('tvUrlKatName');//, 'http://kat.ph/usearch/{NAME} {EPISODE}/?field=seeders&sorder=desc', 'input', 'API Settings');
-Options::remove('tvUrlPirateName');//, 'http://thepiratebay.se/search/{NAME} {EPISODE}', 'input', 'API Settings');
-Options::remove('tvUrlWarezName');//, 'http://www.warez-bb.org/search.php?search_forum=57&search_fields=titleonly&search_terms=all&search_keywords={NAME} {EPISODE}', 'input', 'API Settings');
+Options::addOnce('fbSendName', false, 'bool', 'API Settings');
 
 }
 ?>

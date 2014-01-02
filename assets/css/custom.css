@@ -32,38 +32,31 @@ img.facebook {
 
   width:  32px;
   height: 32px;
-  background:url(../../img/services.jpg) 0 0;
+  background:url(../../img/services.png) -32px 0;
 
 }
 
 
 img.da {
-
   width:  32px;
   height: 32px;
-  background:url(../../img/services.jpg) -125px 0;
-
+  background:url(../../img/services.png) -96px 0;
 }
 
 
 img.googlePlus {
-
   width:  32px;
   height: 32px;
-  background:url(../../img/services.jpg) -39px 0;
-
+  background:url(../../img/services.png) 0 0;
 }
 
 img.flickr {
-
-  width:  40px;
+  width:  32px;
   height: 32px;
-  background:url(../../img/services.jpg) -79px 0;
-
+  background:url(../../img/services.png) -64px 0;
 }
 
 body {
-
   padding-top: 0px;
   background: white;
   font-family: 'Exo 2', "Trebuchet MS", Helvetica, sans-serif;

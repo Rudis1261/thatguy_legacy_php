@@ -76,6 +76,7 @@ $action = ($id) ? "Save Changes" : "Create new blog";
 	<div class="clearfix"></div>
 	<div class="input-group">
 		<input type="file" icon="picture" title="Attach Images" name="upload[]" class="btn-success btn-lg" multiple>
-		<button type="submit" name="action" class="btn btn-default btn-lg"><?php echo $action . " " . icon('bookmark'); ?></button>
+		<input type="hidden" name="action" value="createBlog" />
+		<button type="submit" class="btn btn-default btn-lg"><?php echo $action . " " . icon('bookmark'); ?></button>
 	</div>
 </form>
