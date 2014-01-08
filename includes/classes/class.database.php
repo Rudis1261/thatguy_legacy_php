@@ -294,4 +294,39 @@
             else
                 return false;
         }
+
+        # I would like to transform and array quickly
+        private function transform($inputArray, $column='seriesid')
+        {
+            # Ensure we are dealing with actual data
+            if (!empty($inputArray))
+            {
+                # We will be filling this as we go along
+                $newArray = array();
+
+                # Loop through the array.
+                foreach($inputArray as $array)
+                {
+                    # Ensure that we have an id to set as the index
+                    if (isset($array[ $column ]))
+                    {
+                        # Then set it
+                        $newArray[ strtolower($array[ $column ]) ] = $array;
+                    }
+                }
+
+                # Cool we were able to transform the data
+                if (!empty($newArray))
+                {
+                    # Kill the original
+                    unset($inputArray);
+
+                    # Set the output
+                    $inputArray = $newArray;
+                }
+            }
+
+            # Default to returning the value
+            return $inputArray;
+        }
     }

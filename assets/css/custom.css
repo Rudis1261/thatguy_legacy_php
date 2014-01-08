@@ -61,6 +61,8 @@ body {
   background: white;
   font-family: 'Exo 2', "Trebuchet MS", Helvetica, sans-serif;
   padding-bottom: 40px;
+  font-size: 16px;
+  line-height: 20px;
 }
 
 #wrapper {

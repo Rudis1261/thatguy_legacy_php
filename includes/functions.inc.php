@@ -168,23 +168,26 @@
     // and manipulate the dates as needed.
     function calendar($month = null, $year = null)
     {
-        if(is_null($month)) $month = date('n');
-        if(is_null($year)) $year = date('Y');
+        if (is_null($month))    $month = date('F');
+        if (is_null($year))     $year = date('Y');
 
-        $first = mktime(0, 0, 0, $month, 1, $year);
-        $last = mktime(23, 59, 59, $month, date('t', $first), $year);
+        $start  = strtotime( 'first day of ' . $month . ' ' . $year);
+        $end    = strtotime( 'last day of ' . $month . ' ' . $year);
+        $start  = $first - (86400 * date('w', $first));
+        $stop   = $last + (86400 * (7 - date('w', $first)));
+        $out    = array();
 
-        $start = $first - (86400 * date('w', $first));
-        $stop = $last + (86400 * (7 - date('w', $first)));
-
-        $out = array();
         while($start < $stop)
         {
             $week = array();
             if($start > $last) break;
             for($i = 0; $i < 7; $i++)
             {
-                $week[$i] = $start;
+                $week[$i] = array(
+                    "start" =>  $start,
+                    "end"   => ($start + 86400)
+                );
+
                 $start += 86400;
             }
             $out[] = $week;

@@ -77,7 +77,7 @@ if ( ($Auth->loggedIn()) && $Auth->isAdmin() )
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="<?php
+    <script async src="<?php
 	if (isset($javascript))
 	{
 		echo $javascript . "?t=" .  Cache::modified($javascript);
