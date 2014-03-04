@@ -34,6 +34,7 @@ switch($action)
 
     # Save info
     case "write":
+    	auth($Auth, $Error);
         $Portfolio->upsert($id);
         exit();
         break;
@@ -41,6 +42,7 @@ switch($action)
 
     # Cleanup cron, to remove unpublished and stale images
     case "clean":
+        auth($Auth, $Error);
         $Portfolio->clean();
         exit();
         break;
@@ -54,7 +56,7 @@ switch($action)
 
     # Dropping images like they are hot
     case "drop":
-
+        auth($Auth, $Error);
         # Attempt to remove the image
         $drop = $Portfolio->drop($id);
 
@@ -80,6 +82,22 @@ switch($action)
         $body .= $Portfolio->defaultView();
         break;
 }
+
+function auth($Auth, $Error)
+{     
+    # Check if the user is indeed logged in 
+    if (($Auth->loggedIn()) AND ($Auth->isAdmin()))
+    {
+    	return true;
+    } 
+    
+    else 
+    {
+    	$Error->add("error", "Authentication failed");
+    	redirect("portfolio.php");
+    }   
+}
+
 
 if ((isset($_SESSION['error'])) AND (count($_SESSION['error']) > 0)) $msg = $Error->alert();
 Template::setBaseDir('./assets/tmpl');
